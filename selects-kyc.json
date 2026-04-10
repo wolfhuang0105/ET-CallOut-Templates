@@ -1,5 +1,4 @@
 {
-  "_comment": "KYC 表單選項設定檔。各 key 對應表單中的 radio group，value 為選項陣列。",
   "listener": [
     "媽媽",
     "爸爸",
@@ -14,10 +13,6 @@
   "gender": [
     "男生",
     "女生"
-  ],
-  "line": [
-    "Y",
-    "N"
   ],
   "decision": [
     "媽媽",
