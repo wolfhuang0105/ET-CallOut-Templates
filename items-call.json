@@ -11,12 +11,22 @@
     {
       "id": "s1a",
       "text": "有接聽",
-      "line": "有接聽"
+      "line": "有接聽",
+      "subLabel": "接聽後狀況",
+      "subopts": [
+        {
+          "id": "s1a1",
+          "text": "目前在忙-稍後再撥",
+          "line": "有接聽，對方表示目前在忙，稍後再撥",
+          "focusStep": "step4"
+        }
+      ]
     },
     {
       "id": "s1b",
       "text": "未接聽",
       "line": "未接聽",
+      "subLabel": "未接聽類型",
       "subopts": [
         {
           "id": "s1b1",
