@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ETalking 通話 與 KYC 紀錄模板 v3.4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F0F2F8;--sf:#fff;--sf2:#F5F6FA;--t1:#1C2340;--t2:#6B7A99;--t3:#9AA3B8;--bd:#DDE2F0;--bd2:#C5CFEA;--blue:#4F6EF7;--bbg:#EEF2FF;--blue2:#3A5AE8;--blt:#C5D5FF;--green:#1E8449;--red:#C0392B;--rbg:#FFECEC;--amber:#D97706;--ambg:#FFFBEB;--r:8px;--rlg:12px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t1);font-size:14px;min-height:100vh;padding:20px 16px 80px}
+.app{max-width:860px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.brand{font-size:13px;font-weight:700;color:var(--blue);letter-spacing:.06em}
+.clock{font-size:12px;font-weight:500;color:var(--t2);background:var(--sf);border:1px solid var(--bd);border-radius:20px;padding:5px 13px;font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:6px;margin-bottom:16px}
+.tbtn{flex:1;padding:9px 6px;border:1.5px solid var(--bd);border-radius:var(--r);background:var(--sf);cursor:pointer;font-size:12px;font-weight:500;color:var(--t2);font-family:'Noto Sans TC',sans-serif;transition:all .12s;text-align:center}
+.tbtn:hover{border-color:var(--bd2);color:var(--t1)}.tbtn.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.tpane{display:none}.tpane.on{display:block}
+.call-row{display:grid;grid-template-columns:3fr 2fr;gap:10px;margin-bottom:10px;align-items:stretch}
+.call-row-cards{display:flex;flex-direction:column;gap:10px;min-width:0}
+.call-row-cards .card{margin-bottom:0}
+.call-row-ta{display:flex;flex-direction:column;min-width:0}
+.card{background:var(--sf);border:1px solid var(--bd);border-left:3px solid var(--blue);border-radius:var(--rlg);overflow:hidden;transition:opacity .2s}
+.card.dim{opacity:.38;pointer-events:none}
+.chead{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--sf2);border-bottom:1px solid var(--bd)}
+.cnum{width:22px;height:22px;border-radius:50%;background:var(--bd2);color:var(--t2);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .2s}
+.cnum.on{background:var(--blue);color:#fff}
+.ctitle{font-size:12px;font-weight:700;color:var(--t2);letter-spacing:.05em;text-transform:uppercase;flex:1}
+.ctitle em{font-weight:400;font-style:normal;color:var(--t3)}
+.cbody{padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.pg{display:flex;flex-wrap:wrap;gap:6px}
+.pill{display:inline-flex;align-items:center;padding:6px 13px;border:1.5px solid var(--bd);border-radius:20px;cursor:pointer;font-size:12px;font-weight:500;color:var(--t2);background:var(--sf);transition:all .12s;user-select:none}
+.pill:hover{border-color:var(--bd2);color:var(--t1)}.pill.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+.s3-panel{display:flex;flex-direction:column;border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
+.s3-group{border-bottom:1px solid var(--bd)}.s3-group:last-child{border-bottom:none}
+.s3-group-head{display:flex;align-items:center;gap:7px;padding:6px 11px;background:var(--sf2)}
+.s3-group-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0}
+.s3-group-label{font-size:11px;font-weight:700;color:var(--t2);letter-spacing:.04em}
+.s3-group-body{padding:7px 11px 9px 24px;display:flex;flex-wrap:wrap;gap:6px;background:var(--sf)}
+.s3-leaf-row{padding:8px 11px;background:var(--sf);display:flex;flex-wrap:wrap;gap:6px;border-top:1px solid var(--bd)}
+.s2-groups{display:flex;flex-direction:column;gap:7px;width:100%}
+.s2-glabel{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.08em;margin-bottom:4px;padding-left:1px}
+.subrow{display:flex;align-items:flex-start;flex-wrap:wrap;gap:6px;width:100%;padding:8px 11px;background:var(--sf2);border:1px dashed var(--bd2);border-radius:var(--r)}
+.sublabel{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.05em;white-space:nowrap;padding-top:7px;min-width:38px}
+.subrow .pg{flex:1}
+.dpill{display:inline-flex;flex-direction:column;align-items:center;padding:6px 12px 5px;border:1.5px solid var(--bd);border-radius:20px;cursor:pointer;background:var(--sf);transition:all .12s;user-select:none;gap:1px;min-width:68px}
+.dpill:hover{border-color:var(--bd2)}.dpill.on{background:var(--blue);border-color:var(--blue)}
+.dpill-label{font-size:12px;font-weight:500;color:var(--t2);transition:color .12s}.dpill.on .dpill-label{color:#fff}
+.dpill-date{font-size:10px;color:var(--t3);font-variant-numeric:tabular-nums;transition:color .12s}.dpill.on .dpill-date{color:rgba(255,255,255,.75)}
+.nyr-pill{display:inline-flex;flex-direction:column;align-items:center;padding:6px 9px 5px;border:1.5px solid var(--bd);border-radius:20px;background:var(--sf);transition:all .12s;user-select:none;gap:3px;min-width:84px}
+.nyr-pill.on{background:var(--blue);border-color:var(--blue)}
+.nyr-pill-top{display:flex;align-items:center;gap:4px}
+.nyr-label{font-size:12px;font-weight:500;color:var(--t2)}
+.nyr-pill.on .nyr-label,.nyr-pill.on .nyr-date{color:#fff}
+.nyr-pill.on .nyr-date{color:rgba(255,255,255,.75)}
+.nyr-date{font-size:10px;color:var(--t3);font-variant-numeric:tabular-nums}
+.nyr-ctrl{display:flex;align-items:center;gap:5px}
+.nyr-n{font-size:12px;font-weight:700;color:var(--t1);min-width:18px;text-align:center}
+.nyr-pill.on .nyr-n{color:#fff}
+.nyr-btn{width:18px;height:18px;border:1.5px solid var(--bd2);border-radius:50%;background:var(--sf2);cursor:pointer;font-size:11px;font-weight:700;color:var(--t2);display:flex;align-items:center;justify-content:center;line-height:1;transition:all .12s;flex-shrink:0}
+.nyr-btn:hover{background:var(--bbg);border-color:var(--blue);color:var(--blue)}
+.nyr-pill.on .nyr-btn{background:rgba(255,255,255,.2);border-color:rgba(255,255,255,.4);color:#fff}
+.logsec{background:var(--sf);border:1px solid var(--bd);border-radius:var(--rlg);overflow:hidden;display:flex;flex-direction:column;flex:1}
+.logsec.dim{opacity:.38;pointer-events:none}
+.logsec.dim .btn.warn{pointer-events:auto;opacity:1}
+.logsec-head{display:flex;align-items:center;justify-content:space-between;padding:7px 11px;background:var(--sf2);border-bottom:1px solid var(--bd);flex-shrink:0}
+.logsec-label{font-size:10px;font-weight:700;color:var(--t2);letter-spacing:.06em;text-transform:uppercase;display:flex;align-items:center;gap:5px}
+.logsec-edited{font-size:9px;font-weight:500;color:var(--amber);background:var(--ambg);border:1px solid #FCD34D;border-radius:10px;padding:1px 7px;display:none}
+.logsec-edited.show{display:inline}
+.log-sec-ta{width:100%;flex:1;padding:9px 12px;border:none;background:var(--sf);color:var(--t1);font-size:12.5px;font-family:'Noto Sans TC',sans-serif;line-height:1.9;resize:none;outline:none;min-height:54px}
+.log-sec-ta:focus{background:var(--bbg)}.log-sec-ta::placeholder{color:var(--t3);font-size:11px}
+.combined-wrap{margin-top:4px;background:var(--sf);border:1px solid var(--bd);border-left:3px solid var(--green);border-radius:var(--rlg);overflow:hidden}
+.combined-head{display:flex;align-items:center;justify-content:space-between;padding:8px 13px;background:var(--sf2);border-bottom:1px solid var(--bd)}
+.combined-label{font-size:10px;font-weight:700;color:var(--green);letter-spacing:.08em;text-transform:uppercase}
+.combined-ta{width:100%;min-height:90px;padding:11px 14px;border:none;background:#F8FDF9;color:var(--t1);font-size:12.5px;font-family:'Noto Sans TC',sans-serif;line-height:2;resize:vertical;outline:none;cursor:text;user-select:text}
+.brow{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.btn{padding:8px 18px;border:1.5px solid var(--bd);border-radius:var(--r);background:var(--sf);cursor:pointer;font-size:12px;font-weight:500;color:var(--t1);font-family:'Noto Sans TC',sans-serif;transition:all .12s}
+.btn:hover{background:var(--sf2);border-color:var(--bd2)}.btn:active{transform:scale(.98)}
+.btn.acc{background:var(--blue);color:#fff;border-color:var(--blue)}.btn.acc:hover{background:var(--blue2)}
+.btn.sm{padding:5px 12px;font-size:11px}.btn.ok{color:var(--green)!important;border-color:var(--green)!important}
+.btn.warn{color:var(--amber)!important;border-color:var(--amber)!important;font-size:11px;padding:4px 10px}
+.ksec{margin-bottom:16px}
+.kslabel{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:8px;padding-left:2px}
+.kgrid{background:var(--sf);border:1px solid var(--bd);border-left:3px solid var(--blue);border-radius:var(--rlg);overflow:hidden}
+.krow{display:grid;grid-template-columns:152px 1fr;border-bottom:1px solid var(--bd)}
+.krow:last-child{border-bottom:none}.krow.split{grid-template-columns:152px 1fr 1fr}
+.klabel{padding:10px 13px;font-size:11px;font-weight:700;color:var(--t2);background:var(--sf2);border-right:1px solid var(--bd);display:flex;align-items:flex-start;line-height:1.5;padding-top:13px;flex-shrink:0}
+.kval{padding:6px 10px;display:flex;flex-direction:column;gap:4px;min-height:40px;justify-content:center}
+.kval+.kval{border-left:1px solid var(--bd)}
+.fi-wrap{display:flex;flex-direction:column;gap:2px;width:100%}
+.fi{width:100%;padding:6px 9px;border:1.5px solid var(--bd);border-radius:var(--r);background:var(--sf2);color:var(--t1);font-size:13px;font-family:'Noto Sans TC',sans-serif;outline:none;transition:all .15s}
+.fi:hover{border-color:var(--bd2);background:var(--sf)}.fi:focus{border-color:var(--blue);background:var(--sf)}.fi::placeholder{color:var(--t3)}
+.fhint{font-size:10px;color:var(--t3);line-height:1.4;padding-left:1px}
+.fta{width:100%;padding:6px 9px;border:1.5px solid var(--bd);border-radius:var(--r);background:var(--sf2);color:var(--t1);font-size:13px;font-family:'Noto Sans TC',sans-serif;outline:none;resize:vertical;min-height:56px;line-height:1.6;transition:all .15s}
+.fta:hover{border-color:var(--bd2);background:var(--sf)}.fta:focus{border-color:var(--blue);background:var(--sf)}.fta::placeholder{color:var(--t3)}
+.rg{display:flex;flex-wrap:wrap;gap:5px}
+.rg label{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;color:var(--t2);padding:5px 11px;border:1.5px solid var(--bd);border-radius:20px;background:var(--sf2);cursor:pointer;transition:all .12s;user-select:none}
+.rg label:hover{border-color:var(--bd2);color:var(--t1)}.rg input[type=radio]{display:none}
+.rg label:has(input:checked){background:var(--blue);color:#fff;border-color:var(--blue)}
+.class-picker{display:flex;flex-direction:column;gap:5px;padding:3px 0}
+.class-group{display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+.cglbl{font-size:10px;font-weight:700;color:var(--t3);min-width:42px;letter-spacing:.03em;text-transform:uppercase}
+.cpill{display:inline-flex;align-items:center;padding:4px 10px;border:1.5px solid var(--bd);border-radius:20px;cursor:pointer;font-size:12px;font-weight:500;color:var(--t2);background:var(--sf2);transition:border-color .15s,background .12s,color .12s;user-select:none}
+.cpill:hover{border-color:var(--bd2);color:var(--t1)}.cpill.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+@keyframes suggest-pulse{0%,100%{border-color:#F59E0B;box-shadow:0 0 0 2px #F59E0B33}50%{border-color:#FCD34D;box-shadow:0 0 0 3px #F59E0B18}}
+.cpill.suggested{border:2px dashed #F59E0B!important;animation:suggest-pulse 1.4s ease-in-out infinite}
+.cpill.on.suggested{background:var(--blue)!important;color:#fff!important;border:2px dashed #F59E0B!important;animation:suggest-pulse 1.4s ease-in-out infinite}
+.suggest-hint{font-size:10px;color:var(--amber);padding-left:1px;margin-top:3px;display:none}.suggest-hint.show{display:block}
+.demo-section{display:flex;flex-direction:column;gap:10px;padding:10px 0}
+.demo-tg{display:flex;gap:3px;flex-wrap:wrap}
+.demo-tc{display:flex;flex-direction:column;align-items:center;gap:2px}
+.demo-th{padding:5px 7px;border:1.5px solid var(--bd);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:var(--sf);color:var(--t1);transition:all .12s;user-select:none;min-width:30px;text-align:center}
+.demo-th:hover{border-color:var(--blue);color:var(--blue)}.demo-th.sel{background:var(--blue);color:#fff;border-color:var(--blue)}
+.demo-tm{padding:3px 5px;border:1.5px solid var(--bd);border-radius:5px;font-size:10px;cursor:pointer;background:var(--sf2);color:var(--t3);transition:all .12s;user-select:none;text-align:center;width:100%}
+.demo-tm:hover{border-color:var(--blue);color:var(--blue)}.demo-tm.sel{background:var(--bbg);color:var(--blue2);border-color:var(--blue);font-weight:700}
+.demo-time-display{font-size:11px;color:var(--blue);font-weight:600;margin-top:2px}
+.lv-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;margin-top:6px}.lv-lbl:first-child{margin-top:0}
+.lv-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:2px}
+.lv{padding:5px 12px;border:1.5px solid var(--bd);border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;background:var(--sf);color:var(--t1);transition:all .12s;user-select:none;white-space:nowrap}
+.lv:hover{border-color:var(--blue);color:var(--blue)}.lv.sel{background:var(--blue);color:#fff;border-color:var(--blue)}
+.lv.sub{background:var(--bbg);color:var(--blue2);border-color:var(--blt);font-weight:500}
+.lv.sug{border:2px dashed #F59E0B;color:var(--amber)}.lv.sug.sel{border-style:solid;border-color:var(--blue);background:var(--blue);color:#fff}
+.lv.sug.sub{border-style:solid;border-color:var(--blt);background:var(--bbg);color:var(--blue2)}
+.lv.rare{color:var(--t3);border-style:dashed}.lv.rare:hover{border-style:solid}
+.lv-hint{font-size:11px;color:var(--blue);min-height:14px;margin-top:3px}
+.prev-wrap{margin-top:16px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rlg);overflow:hidden}
+.prev-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--sf2);border-bottom:1px solid var(--bd)}
+.prev-title{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.08em}
+.prev-ta{width:100%;min-height:380px;padding:14px 16px;border:none;background:var(--sf);color:var(--t1);font-size:12px;font-family:'JetBrains Mono',monospace;line-height:2.1;resize:vertical;outline:none}
+.csec{background:var(--sf);border:1px solid var(--bd);border-radius:var(--rlg);margin-bottom:10px;overflow:hidden}
+.csh{padding:10px 14px;background:var(--sf2);font-size:12px;font-weight:700;color:var(--t1);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.csb{padding:12px 14px}
+.crow{display:flex;gap:7px;align-items:center;padding:8px 10px;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:7px}
+.crow input{flex:1;padding:5px 8px;border:1.5px solid var(--bd);border-radius:6px;background:var(--sf);color:var(--t1);font-size:12px;font-family:'Noto Sans TC',sans-serif;outline:none}
+.crow input:focus{border-color:var(--blue)}
+.clbl{font-size:10px;color:var(--t3);white-space:nowrap;font-weight:700;letter-spacing:.05em}
+.dbtn{padding:4px 9px;border:1.5px solid var(--bd);border-radius:6px;background:none;cursor:pointer;font-size:11px;color:var(--red);font-family:'Noto Sans TC',sans-serif;flex-shrink:0}
+.dbtn:hover{background:var(--rbg)}
+.abtn{width:100%;padding:7px;border:1.5px dashed var(--bd2);border-radius:var(--r);background:none;cursor:pointer;font-size:11px;color:var(--t3);font-family:'Noto Sans TC',sans-serif;margin-top:4px;transition:all .12s}
+.abtn:hover{background:var(--sf2);color:var(--t2)}
+.io-row{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.json-ta{width:100%;min-height:260px;padding:13px;border:1.5px solid var(--bd);border-radius:var(--rlg);background:var(--sf2);color:var(--t1);font-size:11.5px;font-family:'JetBrains Mono',monospace;line-height:1.7;resize:vertical;outline:none;transition:border-color .15s}
+.json-ta:focus{border-color:var(--blue);background:var(--sf)}
+.kcfg-sec{margin-bottom:14px}
+.kcfg-label{font-size:11px;font-weight:700;color:var(--t2);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.kcfg-label::after{content:'';flex:1;height:1px;background:var(--bd)}
+.opt-wrap{display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r)}
+.opt-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:var(--sf);border:1.5px solid var(--bd);border-radius:20px;font-size:12px;color:var(--t2)}
+.opt-chip input{border:none;background:transparent;color:var(--t1);font-size:12px;font-family:'Noto Sans TC',sans-serif;outline:none;width:68px}
+.opt-chip .rx{cursor:pointer;color:var(--red);font-size:13px;line-height:1;font-weight:700}
+.add-opt{font-size:11px;color:var(--t3);cursor:pointer;padding:4px 10px;border:1.5px dashed var(--bd2);border-radius:20px;background:none;font-family:'Noto Sans TC',sans-serif;transition:all .12s}
+.add-opt:hover{background:var(--sf);color:var(--t2)}
+.info-box{font-size:12px;color:var(--t2);background:var(--bbg);border:1px solid var(--blt);border-radius:var(--r);padding:10px 14px;margin-bottom:14px;line-height:1.8}
+@media(max-width:600px){.call-row{grid-template-columns:1fr}}
+.prefix-wrap{margin-top:10px;background:var(--sf);border:1px solid var(--bd);border-left:3px solid var(--amber);border-radius:var(--rlg);overflow:hidden}
+.prefix-head{display:flex;align-items:center;justify-content:space-between;padding:7px 13px;background:var(--ambg);border-bottom:1px solid var(--bd)}
+.prefix-label{font-size:10px;font-weight:700;color:var(--amber);letter-spacing:.08em;text-transform:uppercase}
+.prefix-body{padding:10px 13px;display:flex;flex-wrap:wrap;gap:6px}
+.pfx-pill{display:inline-flex;align-items:center;padding:6px 13px;border:1.5px solid var(--bd);border-radius:20px;cursor:pointer;font-size:12px;font-weight:500;color:var(--t2);background:var(--sf);transition:all .12s;user-select:none}
+.pfx-pill:hover{border-color:var(--bd2);color:var(--t1)}.pfx-pill.on{background:var(--amber);color:#fff;border-color:var(--amber)}
+/* ── 建議事項 ── */
+.sugg-wrap{margin-top:8px;background:var(--sf);border:1px solid var(--bd);border-left:3px solid var(--red);border-radius:var(--rlg);overflow:hidden}
+.sugg-head{display:flex;align-items:center;justify-content:space-between;padding:7px 13px;background:var(--rbg);border-bottom:1px solid var(--bd)}
+.sugg-label{font-size:10px;font-weight:700;color:var(--red);letter-spacing:.08em;text-transform:uppercase}
+.sugg-body{padding:10px 13px;display:flex;flex-wrap:wrap;gap:6px}
+.sug-pill{display:inline-flex;align-items:center;padding:6px 13px;border:1.5px solid var(--bd);border-radius:20px;cursor:pointer;font-size:12px;font-weight:500;color:var(--t2);background:var(--sf);transition:all .12s;user-select:none}
+.sug-pill:hover{border-color:var(--bd2);color:var(--t1)}.sug-pill.on{background:var(--red);color:#fff;border-color:var(--red)}
+/* ── 釋出名單（縮減）── */
+.release-wrap{margin-top:8px;background:var(--sf);border:1px solid var(--bd);border-left:3px solid #0891B2;border-radius:var(--rlg);overflow:hidden}
+.release-head{display:flex;align-items:center;justify-content:space-between;padding:8px 13px;background:#F0FDFF;border-bottom:1px solid var(--bd)}
+.release-label{font-size:10px;font-weight:700;color:#0891B2;letter-spacing:.08em;text-transform:uppercase}
+.release-ta{width:100%;min-height:70px;padding:11px 14px;border:none;background:#F7FDFF;color:var(--t1);font-size:12.5px;font-family:'Noto Sans TC',sans-serif;line-height:2;resize:vertical;outline:none;cursor:text;user-select:text}
+/* ── 設定拖拉 ── */
+.cfg-drag-item{position:relative;margin-bottom:0}
+.cfg-drag-item.drag-over{outline:2px dashed var(--blue);outline-offset:-2px;border-radius:var(--r)}
+.cfg-drag-handle{cursor:grab;color:var(--t3);font-size:13px;padding:0 3px;flex-shrink:0;user-select:none;line-height:1}
+.cfg-drag-handle:active{cursor:grabbing}
+.csub-group{margin:0 0 6px 14px;padding:8px 10px;border-left:3px solid var(--blt);background:var(--bbg);border-radius:0 var(--r) var(--r) 0}
+.csub-group-label{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.05em;margin-bottom:6px;padding-left:1px}
+.tpl-overlay{position:fixed;inset:0;background:rgba(28,35,64,.45);z-index:999;display:none;align-items:center;justify-content:center;padding:16px}
+.tpl-overlay.open{display:flex}
+.tpl-modal{background:var(--sf);border:1px solid var(--bd2);border-radius:var(--rlg);width:100%;max-width:640px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 8px 40px rgba(0,0,0,.18);transition:max-width .2s,max-height .2s}
+.tpl-modal.maxed{max-width:98vw;max-height:96vh;border-radius:4px}
+.tpl-modal-head{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--bd);flex-shrink:0}
+.tpl-modal-title{font-size:13px;font-weight:700;color:var(--t1)}
+.tpl-close{width:26px;height:26px;border:none;background:none;cursor:pointer;font-size:18px;color:var(--t2);display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background .12s}
+.tpl-close:hover{background:var(--sf2)}
+.tpl-tabs{display:flex;gap:0;border-bottom:1px solid var(--bd);flex-shrink:0}
+.tpl-tab{flex:1;padding:9px 12px;border:none;border-bottom:2px solid transparent;background:none;cursor:pointer;font-size:12px;font-weight:600;color:var(--t2);font-family:'Noto Sans TC',sans-serif;transition:all .12s;margin-bottom:-1px}
+.tpl-tab.on{color:var(--blue);border-bottom-color:var(--blue)}
+.tpl-body{display:flex;flex-direction:column;gap:0;flex:1;overflow:hidden}
+.tpl-cfg{padding:12px 16px;background:var(--sf2);border-bottom:1px solid var(--bd);display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.tpl-cfg-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tpl-cfg-label{font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.06em;white-space:nowrap;min-width:52px}
+.tpl-fi{padding:5px 9px;border:1.5px solid var(--bd);border-radius:6px;background:var(--sf);color:var(--t1);font-size:12px;font-family:'Noto Sans TC',sans-serif;outline:none;transition:border-color .15s}
+.tpl-fi:focus{border-color:var(--blue)}
+.tpl-fi.sm{width:80px}.tpl-fi.md{width:130px}.tpl-fi.lg{width:190px}
+.tpl-rg{display:flex;gap:5px;flex-wrap:wrap}
+.tpl-rg label{display:flex;align-items:center;gap:3px;font-size:11px;font-weight:500;color:var(--t2);padding:4px 10px;border:1.5px solid var(--bd);border-radius:20px;background:var(--sf2);cursor:pointer;transition:all .12s;user-select:none}
+.tpl-rg label:hover{border-color:var(--bd2)}.tpl-rg input[type=radio]{display:none}
+.tpl-rg label:has(input:checked){background:var(--blue);color:#fff;border-color:var(--blue)}
+.tpl-preview-ta{flex:1;width:100%;min-height:220px;padding:14px 16px;border:none;background:var(--sf);color:var(--t1);font-size:12px;font-family:'JetBrains Mono',monospace;line-height:2;resize:none;outline:none}
+.tpl-foot{display:flex;gap:8px;padding:10px 14px;border-top:1px solid var(--bd);background:var(--sf2);flex-shrink:0;align-items:center}
+.tpl-hint{font-size:10px;color:var(--t3);flex:1}
+#btn-age-note.on{background:var(--amber);color:#fff;border-color:var(--amber)}
+
+/* ── 試讀日期/時間 picker ── */
+.tl-date-grid{display:flex;flex-wrap:wrap;gap:5px}
+.tl-dc{display:flex;flex-direction:column;align-items:center;padding:5px 8px;border:1.5px solid var(--bd);border-radius:8px;cursor:pointer;background:var(--sf);transition:all .12s;min-width:42px;user-select:none}
+.tl-dc:hover{border-color:var(--bd2)}.tl-dc.on{background:var(--blue);border-color:var(--blue)}
+.tl-dc-wd{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.04em}.tl-dc.on .tl-dc-wd{color:rgba(255,255,255,.75)}
+.tl-dc-d{font-size:13px;font-weight:700;color:var(--t1)}.tl-dc.on .tl-dc-d{color:#fff}
+.tl-dc-m{font-size:9px;color:var(--t3)}.tl-dc.on .tl-dc-m{color:rgba(255,255,255,.7)}
+.tl-time-grid{display:flex;flex-wrap:wrap;gap:5px}
+.tl-tc{display:flex;flex-direction:column;align-items:center;padding:4px 7px;border:1.5px solid var(--bd);border-radius:6px;cursor:pointer;background:var(--sf);transition:all .12s;min-width:46px;user-select:none}
+.tl-tc:hover{border-color:var(--bd2)}.tl-tc.on{background:var(--blue);border-color:var(--blue)}
+.tl-tc-h{font-size:12px;font-weight:700;color:var(--t1)}.tl-tc.on .tl-tc-h{color:#fff}
+.tl-tc-m{font-size:9px;color:var(--t3)}.tl-tc.on .tl-tc-m{color:rgba(255,255,255,.75)}
+.tl-sel-display{font-size:11px;font-weight:600;color:var(--blue);min-height:16px}
+
+/* ── Email editor ── */
+.tpl-editor-toolbar{display:flex;align-items:center;gap:3px;padding:6px 12px;background:var(--sf2);border-bottom:1px solid var(--bd);flex-shrink:0;flex-wrap:wrap}
+.tbar-btn{padding:3px 8px;border:1.5px solid var(--bd);border-radius:5px;background:var(--sf);cursor:pointer;font-size:12px;color:var(--t1);font-family:'Noto Sans TC',sans-serif;transition:all .12s}
+.tbar-btn:hover{background:var(--bbg);border-color:var(--blue);color:var(--blue)}
+.tbar-sep{width:1px;height:18px;background:var(--bd2);margin:0 3px}
+.tpl-email-editor{flex:1;padding:14px 16px;outline:none;overflow-y:auto;min-height:0;font-family:'Noto Sans TC',sans-serif;font-size:13px;line-height:1.9;color:var(--t1);background:var(--sf);cursor:text}
+.tpl-email-editor a{color:#0563C1}.tpl-email-editor b{font-weight:700}.tpl-email-editor i{font-style:italic}
+/* ── date grid weekly layout ── */
+.tl-week-row{display:flex;gap:4px;margin-bottom:4px}
+.tl-dc{display:flex;flex-direction:column;align-items:center;padding:4px 6px;border:1.5px solid var(--bd);border-radius:7px;cursor:pointer;background:var(--sf);transition:all .12s;min-width:38px;user-select:none}
+.tl-dc:hover{border-color:var(--bd2)}.tl-dc.on{background:var(--blue);border-color:var(--blue)}
+.tl-dc.past{opacity:.25;pointer-events:none;cursor:default}
+.tl-dc-wd{font-size:9px;font-weight:700;color:var(--t3);letter-spacing:.03em}.tl-dc.on .tl-dc-wd{color:rgba(255,255,255,.7)}
+.tl-dc-d{font-size:13px;font-weight:700;color:var(--t1)}.tl-dc.on .tl-dc-d{color:#fff}
+.tl-dc-m{font-size:9px;color:var(--t3)}.tl-dc.on .tl-dc-m{color:rgba(255,255,255,.65)}
+.tl-dc.sat .tl-dc-wd{color:#2980B9}.tl-dc.sun .tl-dc-wd{color:#C0392B}
+.tl-dc.on.sat .tl-dc-wd,.tl-dc.on.sun .tl-dc-wd{color:rgba(255,255,255,.85)}
+
+/* ── Line editor ── */
+.tpl-line-editor{flex:1;padding:14px 16px;outline:none;overflow-y:auto;min-height:220px;
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:2;color:var(--t1);
+  background:var(--sf);cursor:text;white-space:pre-wrap;word-break:break-word}
+/* ── toolbar extras ── */
+.tbar-color{width:28px;height:26px;padding:1px;border:1.5px solid var(--bd);border-radius:5px;
+  cursor:pointer;background:var(--sf);outline:none}
+.tbar-select{padding:3px 6px;border:1.5px solid var(--bd);border-radius:5px;background:var(--sf);
+  color:var(--t1);font-size:11px;font-family:'Noto Sans TC',sans-serif;outline:none;cursor:pointer}
+.tbar-select:hover{border-color:var(--blue)}
+
+</style>
+</head>
+<body>
+<div class="app">
+<div class="topbar"><span class="brand">ETalking 通話 與 KYC 紀錄模板 v3.4</span><span class="clock" id="clock">—</span></div>
+<div class="tabs">
+  <button class="tbtn on" onclick="switchTab('call')">通話記錄</button>
+  <button class="tbtn" onclick="switchTab('kyc')">KYC 顧客資訊</button>
+  <button class="tbtn" onclick="switchTab('cfg-call')">設定・通話</button>
+  <button class="tbtn" onclick="switchTab('cfg-kyc')">設定・KYC</button>
+</div>
+
+<div id="tab-call" class="tpane on">
+  <div class="prefix-wrap">
+    <div class="prefix-head"><span class="prefix-label">▸ 前贅詞</span><button class="btn sm" onclick="clearPrefix()" style="font-size:10px;padding:3px 9px">清除</button></div>
+    <div class="prefix-body" id="prefix-pills"></div>
+  </div>
+  <div class="sugg-wrap">
+    <div class="sugg-head"><span class="sugg-label">⚑ 建議事項</span><button class="btn sm" onclick="clearSuggestion()" style="font-size:10px;padding:3px 9px">清除</button></div>
+    <div class="sugg-body" id="sugg-pills"></div>
+  </div>
+  <div class="call-row">
+    <div class="call-row-cards">
+      <div class="card" id="card-step1"><div class="chead"><div class="cnum on" id="n1">1</div><div class="ctitle">接聽狀態</div></div><div class="cbody" id="cbody-step1"></div></div>
+      <div class="card dim" id="card-step2"><div class="chead"><div class="cnum" id="n2">2</div><div class="ctitle">態度 &amp; 對答意願 <em>（可複選）</em></div><button class="btn sm" id="sa-s2" onclick="toggleSelectAll('step2')">全選</button></div><div class="cbody" id="cbody-step2"></div></div>
+    </div>
+    <div class="call-row-ta">
+      <div class="logsec" style="flex:1"><div class="logsec-head"><span class="logsec-label">接聽狀態<span class="logsec-edited" id="edit-badge-s1">已手動編輯</span></span><button class="btn warn" id="reset-s1" onclick="resetSection('s1')">↺ 重新產生</button></div><textarea class="log-sec-ta" id="log-s1" placeholder="Step 1 自動產生…" oninput="onSectionEdit('s1')"></textarea></div>
+      <div class="logsec dim" id="logsec-s2" style="flex:1"><div class="logsec-head"><span class="logsec-label">態度 &amp; 對答意願<span class="logsec-edited" id="edit-badge-s2">已手動編輯</span></span><button class="btn warn" id="reset-s2" onclick="resetSection('s2')">↺ 重新產生</button></div><textarea class="log-sec-ta" id="log-s2" placeholder="Step 2 自動產生…" oninput="onSectionEdit('s2')"></textarea></div>
+    </div>
+  </div>
+  <div class="call-row">
+    <div class="call-row-cards">
+      <div class="card dim" id="card-step3"><div class="chead"><div class="cnum" id="n3">3</div><div class="ctitle">表達程度 <em>（可複選）</em></div><button class="btn sm" id="sa-s3" onclick="toggleSelectAll('step3')">全選</button></div><div class="cbody" id="cbody-step3"></div></div>
+    </div>
+    <div class="call-row-ta"><div class="logsec"><div class="logsec-head"><span class="logsec-label">表達程度<span class="logsec-edited" id="edit-badge-s3">已手動編輯</span></span><button class="btn warn" id="reset-s3" onclick="resetSection('s3')">↺ 重新產生</button></div><textarea class="log-sec-ta" id="log-s3" placeholder="Step 3 自動產生…" oninput="onSectionEdit('s3')"></textarea></div></div>
+  </div>
+  <div class="call-row">
+    <div class="call-row-cards">
+      <div class="card" id="card-step4"><div class="chead"><div class="cnum" id="n4">4</div><div class="ctitle">建議下次 Call out</div></div><div class="cbody" id="cbody-step4"></div></div>
+    </div>
+    <div class="call-row-ta"><div class="logsec"><div class="logsec-head"><span class="logsec-label">下次 Call out<span class="logsec-edited" id="edit-badge-s4">已手動編輯</span></span><button class="btn warn" id="reset-s4" onclick="resetSection('s4')">↺ 重新產生</button></div><textarea class="log-sec-ta" id="log-s4" placeholder="Step 4 自動產生…" oninput="onSectionEdit('s4')"></textarea></div></div>
+  </div>
+  <div class="combined-wrap">
+    <div class="combined-head"><span class="combined-label">▸ 合併記錄</span><div style="display:flex;gap:8px"><button class="btn sm" onclick="openTplModal()">📋 介紹模板</button><button class="btn sm" id="btn-copy-log" onclick="copyLog()">複製</button><button class="btn sm" onclick="clearLog()">清除</button></div></div>
+    <textarea class="combined-ta" id="log-combined" readonly placeholder="選擇上方選項後自動合併顯示於此…"></textarea>
+  </div>
+  <div class="release-wrap">
+    <div class="release-head">
+      <span class="release-label">▸ 釋出名單（縮減）</span>
+      <div style="display:flex;gap:8px">
+        <span style="font-size:10px;color:#0891B2;align-self:center;opacity:.8">僅含開頭 &amp; 結尾，不含溝通過程</span>
+        <button class="btn sm" id="btn-copy-release" onclick="copyRelease()">複製</button>
+      </div>
+    </div>
+    <textarea class="release-ta" id="log-release" readonly placeholder="接聽狀態 + 建議事項 + 下次 Call out 自動摘取…"></textarea>
+  </div>
+</div>
+
+<div id="tab-kyc" class="tpane">
+  <div class="ksec"><div class="kslabel">通話資訊</div><div class="kgrid">
+    <div class="krow"><div class="klabel">接聽者</div><div class="kval"><div class="rg" id="rg-listener"></div></div></div>
+    <div class="krow split"><div class="klabel">接通時間(時長)</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-call-date" oninput="livePreview()"><span class="fhint">yyyy/mm/dd hh:mm（自動填入）</span></div></div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-call-dur" placeholder="__ min" oninput="livePreview()"><span class="fhint">通話時長（分鐘）</span></div></div></div>
+    <div class="krow"><div class="klabel">接通場景</div><div class="kval"><div class="rg" id="rg-scene"></div></div></div>
+  </div></div>
+
+  <div class="ksec"><div class="kslabel">孩童資訊</div><div class="kgrid">
+    <div class="krow"><div class="klabel">孩童性別</div><div class="kval"><div class="rg" id="rg-gender"></div></div></div>
+    <div class="krow split">
+      <div class="klabel">年齡</div>
+      <div class="kval"><div class="fi-wrap"><input class="fi" id="k-age" placeholder="X 歲" oninput="onAgeInput()"><span class="fhint">輸入數字，班級建議黃框閃爍</span></div></div>
+      <div class="kval"><div class="fi-wrap"><input class="fi" id="k-school" placeholder="學校 / 語言學習背景" oninput="livePreview()"><span class="fhint">e.g. 幼兒園英語 / 安親英語 / 無</span></div></div>
+    </div>
+    <div class="krow"><div class="klabel">班級</div>
+      <div class="kval" style="flex-direction:column;align-items:flex-start;padding:10px">
+        <span class="suggest-hint" id="suggest-hint">⚡ 黃框閃爍 = 年齡推算建議；底色不變，確認後點選；口頭確認不符可另選</span>
+        <div class="class-picker" style="margin-top:5px">
+          <div class="class-group"><span class="cglbl">幼稚園</span><span class="cpill" data-v="幼幼班" onclick="pickClass(this)">幼幼班</span><span class="cpill" data-v="小班" onclick="pickClass(this)">小班</span><span class="cpill" data-v="中班" onclick="pickClass(this)">中班</span><span class="cpill" data-v="大班" onclick="pickClass(this)">大班</span></div>
+          <div class="class-group"><span class="cglbl">小學</span><span class="cpill" data-v="小1" onclick="pickClass(this)">1年級</span><span class="cpill" data-v="小2" onclick="pickClass(this)">2年級</span><span class="cpill" data-v="小3" onclick="pickClass(this)">3年級</span><span class="cpill" data-v="小4" onclick="pickClass(this)">4年級</span><span class="cpill" data-v="小5" onclick="pickClass(this)">5年級</span><span class="cpill" data-v="小6" onclick="pickClass(this)">6年級</span></div>
+          <div class="class-group"><span class="cglbl">國中</span><span class="cpill" data-v="國一" onclick="pickClass(this)">國一</span><span class="cpill" data-v="國二" onclick="pickClass(this)">國二</span><span class="cpill" data-v="國三" onclick="pickClass(this)">國三</span></div>
+          <div class="class-group"><span class="cglbl">高中</span><span class="cpill" data-v="高一" onclick="pickClass(this)">高一</span><span class="cpill" data-v="高二" onclick="pickClass(this)">高二</span><span class="cpill" data-v="高三" onclick="pickClass(this)">高三</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="krow"><div class="klabel">課外/安親/才藝</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-extra" placeholder="在學" oninput="livePreview()"><span class="fhint">e.g. 在學 / 鋼琴 / 安親班 / 畫畫</span></div></div></div>
+    <div class="krow"><div class="klabel">學習目標/規劃困難點</div><div class="kval" style="align-items:flex-start;padding-top:8px"><div class="fi-wrap"><textarea class="fta" id="k-goal" placeholder="e.g. 預計5歲以後才打算安排課程" oninput="livePreview()"></textarea><span class="fhint">目標 / 規劃時程 / 主要困難點</span></div></div></div>
+  </div></div>
+
+  <div class="ksec"><div class="kslabel">背景與動機</div><div class="kgrid">
+    <div class="krow"><div class="klabel">競品/留存動機</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-comp" placeholder="" oninput="livePreview()"><span class="fhint">e.g. TutorABC / Hess / 廣告 / 朋友推薦</span></div></div></div>
+    <div class="krow"><div class="klabel">個性/指定</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-personality" placeholder="" oninput="livePreview()"><span class="fhint">e.g. 活潑外向 / 文靜 / 指定女老師</span></div></div></div>
+  </div></div>
+
+  <div class="ksec"><div class="kslabel">生活樣貌</div><div class="kgrid">
+    <div class="krow"><div class="klabel">生活樣貌</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-lifestyle" placeholder="" oninput="livePreview()"><span class="fhint">e.g. 雙薪家庭 / 全職媽媽 / 工作忙碌</span></div></div></div>
+    <div class="krow"><div class="klabel">可學習時間上課頻率</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-schedule" placeholder="" oninput="livePreview()"><span class="fhint">e.g. 週末 / 每週2次 / 平日下午</span></div></div></div>
+  </div></div>
+
+  <div class="ksec"><div class="kslabel">追蹤與決策</div><div class="kgrid">
+    <div class="krow"><div class="klabel">是否已丟介紹</div><div class="kval" style="flex-direction:column;gap:5px"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div class="pg" id="pg-intro"></div><button class="btn sm" onclick="openTplModal()">📋 介紹模板</button></div><span class="fhint">Line / Email 可複選；尚未互斥</span></div></div>
+    <div class="krow"><div class="klabel">主導權</div><div class="kval"><div class="rg" id="rg-decision"></div></div></div>
+    <div class="krow"><div class="klabel">兄弟姐妹</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-siblings" placeholder="" oninput="livePreview()"><span class="fhint">e.g. 獨生子 / 哥哥8歲 / 妹妹3歲</span></div></div></div>
+    <div class="krow" style="grid-column:1/-1">
+      <div class="klabel" style="align-self:flex-start;padding-top:12px">Demo 體驗</div>
+      <div class="kval" style="padding:12px 14px;align-items:flex-start">
+        <div class="demo-section">
+          <div>
+            <div class="fhint" style="margin-bottom:5px;font-weight:700;color:var(--t2)">時間（13:00–21:00）</div>
+            <div id="demo-tg" class="demo-tg"></div>
+            <div class="demo-time-display" id="demo-time-display">—</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+            <div><div class="fhint" style="margin-bottom:4px;font-weight:700;color:var(--t2)">年齡</div><input class="fi" id="k-demo-age" type="number" min="4" max="17" placeholder="4–17歲" style="width:100px" oninput="onDemoAgeInput()"></div>
+            <div id="demo-age-hint" style="font-size:10px;color:var(--amber);display:none;margin-top:16px">💡 黃虛線 = 建議程度</div>
+          </div>
+          <div>
+            <div class="fhint" style="margin-bottom:5px;font-weight:700;color:var(--t2)">程度選擇</div>
+            <div class="lv-lbl">類別</div><div class="lv-row" id="demo-lv-type"></div>
+            <div class="lv-lbl">等級（L1–L6，L4–L6 少見）</div><div class="lv-row" id="demo-lv-num"></div>
+            <div class="lv-hint" id="demo-lv-hint"></div>
+          </div>
+          <div>
+            <div class="fhint" style="margin-bottom:4px;font-weight:700;color:var(--t2)">是否摺紙</div>
+            <div class="rg" id="rg-demo"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="krow"><div class="klabel">檢定</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-cert" placeholder="" oninput="livePreview()"><span class="fhint">e.g. KET / 劍橋 / 無</span></div></div></div>
+    <div class="krow"><div class="klabel">設備</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-device" placeholder="" oninput="livePreview()"><span class="fhint">e.g. iPad / 手機 / 電腦</span></div></div></div>
+    <div class="krow"><div class="klabel">孩子英文名</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-ename" placeholder="" oninput="livePreview()"><span class="fhint">e.g. Amy / 尚未取</span></div></div></div>
+    <div class="krow"><div class="klabel">後續Action</div><div class="kval"><div class="rg" id="rg-action"></div></div></div>
+    <div class="krow"><div class="klabel">補充/男女老師</div><div class="kval"><div class="fi-wrap"><input class="fi" id="k-teacher" placeholder="" oninput="livePreview()"><span class="fhint">e.g. 希望外師 / 偏好女老師</span></div></div></div>
+    <div class="krow"><div class="klabel">特別異議</div><div class="kval" style="align-items:flex-start;padding-top:8px"><div class="fi-wrap"><textarea class="fta" id="k-objection" placeholder="" oninput="livePreview()"></textarea><span class="fhint">e.g. 不希望太早接觸電子設備 / 預算考量</span></div></div></div>
+  </div></div>
+
+  <div class="prev-wrap"><div class="prev-head"><span class="prev-title">即時預覽</span><div style="display:flex;gap:8px"><button class="btn sm" id="btn-copy-kyc" onclick="copyKYC()">複製</button><button class="btn sm" onclick="clearKYC()">清除</button></div></div><textarea class="prev-ta" id="kyc-preview" readonly></textarea></div>
+</div>
+
+<div id="tab-cfg-call" class="tpane">
+  <div class="io-row"><button class="btn sm" onclick="showCallExport()">匯出 JSON</button><label class="btn sm" style="cursor:pointer">匯入 JSON 檔案<input type="file" accept=".json" style="display:none" onchange="importCallFile(event)"></label><button class="btn sm" onclick="applyImportTA()">套用 JSON 文字</button><button class="btn sm" onclick="resetCall()">還原預設</button><span id="call-status" style="font-size:11px;color:var(--green);display:none"></span></div>
+  <div id="call-reset-confirm" style="display:none;align-items:center;gap:8px;margin-bottom:12px;padding:8px 12px;background:var(--sf2);border:1.5px solid var(--bd2);border-radius:var(--r);font-size:12px;color:var(--t2)">確定還原？<button class="btn sm acc" onclick="confirmYes('call-reset-confirm')">確定</button><button class="btn sm" onclick="confirmNo('call-reset-confirm')">取消</button></div>
+  <textarea class="json-ta" id="json-ta" placeholder="按「匯出 JSON」後在此顯示…"></textarea>
+  <div style="margin-top:14px"></div><div id="cfg-call-root"></div>
+</div>
+
+<div id="tab-cfg-kyc" class="tpane">
+  <div class="info-box">各欄位選項可在此自訂。修改後即時同步表單與預覽。</div>
+  <div class="io-row"><button class="btn sm" onclick="showKYCExport()">匯出 KYC 選項</button><label class="btn sm" style="cursor:pointer">匯入 JSON 檔案<input type="file" accept=".json" style="display:none" onchange="importKYCFile(event)"></label><button class="btn sm" onclick="applyKYCImportTA()">套用 JSON 文字</button><button class="btn sm" onclick="resetKYC()">還原預設</button><span id="kyc-status" style="font-size:11px;color:var(--green);display:none"></span></div>
+  <div id="kyc-reset-confirm" style="display:none;align-items:center;gap:8px;margin-bottom:12px;padding:8px 12px;background:var(--sf2);border:1.5px solid var(--bd2);border-radius:var(--r);font-size:12px;color:var(--t2)">確定還原？<button class="btn sm acc" onclick="confirmYes('kyc-reset-confirm')">確定</button><button class="btn sm" onclick="confirmNo('kyc-reset-confirm')">取消</button></div>
+  <textarea class="json-ta" id="kyc-json-ta" style="margin-bottom:14px"></textarea>
+  <div id="cfg-kyc-root"></div>
+</div>
+</div>
+<!-- 介紹模板 Modal -->
+<div class="tpl-overlay" id="tpl-overlay" onclick="closeTplIfBg(event)">
+  <div class="tpl-modal">
+    <div class="tpl-modal-head">
+      <span class="tpl-modal-title">介紹模板</span>
+      <div style="display:flex;gap:6px">
+        <button class="tpl-close" onclick="toggleTplMax()" id="btn-tpl-max" title="放大／縮小">⛶</button>
+        <button class="tpl-close" onclick="closeTplModal()">×</button>
+      </div>
+    </div>
+    <div class="tpl-tabs">
+      <button class="tpl-tab on" id="ttab-line" onclick="switchTplTab('line')">💬 Line</button>
+      <button class="tpl-tab" id="ttab-email" onclick="switchTplTab('email')">✉ Email</button>
+    </div>
+    <div class="tpl-body">
+      <div id="tpl-line-cfg" class="tpl-cfg">
+        <div class="tpl-cfg-row">
+          <span class="tpl-cfg-label">顧問稱呼</span>
+          <input class="tpl-fi sm" id="tl-name" placeholder="000" oninput="renderTpl()">
+          <span class="tpl-cfg-label" style="min-width:44px">家長稱謂</span>
+          <div class="tpl-rg">
+            <label><input type="radio" name="tl-parent" value="爸爸" onchange="renderTpl()" checked>爸爸</label>
+            <label><input type="radio" name="tl-parent" value="媽媽" onchange="renderTpl()">媽媽</label>
+            <label><input type="radio" name="tl-parent" value="祖父母" onchange="renderTpl()">祖父母</label>
+            <label><input type="radio" name="tl-parent" value="家長" onchange="renderTpl()">其他</label>
+          </div>
+        </div>
+        <div class="tpl-cfg-row">
+          <span class="tpl-cfg-label">家長 Email</span>
+          <input class="tpl-fi lg" id="tl-email" placeholder="example@gmail.com" oninput="renderTpl()">
+        </div>
+        <div class="tpl-cfg-row">
+          <span class="tpl-cfg-label">孩子稱謂</span>
+          <div class="tpl-rg">
+            <label><input type="radio" name="tl-child" value="妹妹" onchange="renderTpl()" checked>妹妹</label>
+            <label><input type="radio" name="tl-child" value="弟弟" onchange="renderTpl()">弟弟</label>
+            <label><input type="radio" name="tl-child" value="孩子" onchange="renderTpl()">孩子</label>
+          </div>
+          <span class="tpl-cfg-label" style="min-width:44px">英文名</span>
+          <input class="tpl-fi sm" id="tl-childname" placeholder="Chiara" oninput="renderTpl()">
+          <span class="tpl-cfg-label" style="min-width:28px">年齡</span>
+          <input class="tpl-fi sm" id="tl-childage" placeholder="8歲" style="width:60px" oninput="renderTpl()">
+        </div>
+        <div class="tpl-cfg-row">
+          <span class="tpl-cfg-label">設備</span>
+          <div class="tpl-rg">
+            <label><input type="radio" name="tl-device" value="tablet" onchange="renderTpl()">平板</label>
+            <label><input type="radio" name="tl-device" value="pc" onchange="renderTpl()">電腦</label>
+            <label><input type="radio" name="tl-device" value="both" onchange="renderTpl()">兩者都說</label>
+            <label><input type="radio" name="tl-device" value="tbd" onchange="renderTpl()" checked>待確認</label>
+          </div>
+        </div>
+        <div class="tpl-cfg-row" style="flex-direction:column;align-items:flex-start;gap:5px">
+          <span class="tpl-cfg-label">試讀日期</span>
+          <div id="tl-date-grid" class="tl-date-grid"></div>
+          <div id="tl-date-display" class="tl-sel-display">尚未選擇</div>
+        </div>
+        <div class="tpl-cfg-row" style="flex-direction:column;align-items:flex-start;gap:5px">
+          <span class="tpl-cfg-label">試讀時間</span>
+          <div id="tl-time-grid" class="tl-time-grid"></div>
+          <div id="tl-time-display" class="tl-sel-display">尚未選擇</div>
+        </div>
+      </div>
+      <div id="tpl-email-cfg" class="tpl-cfg" style="display:none">
+        <div class="tpl-cfg-row">
+          <span class="tpl-cfg-label">客戶稱謂</span>
+          <input class="tpl-fi md" id="te-name" placeholder="劉小姐" oninput="renderTpl()">
+          <span class="tpl-cfg-label" style="min-width:52px">孩子年齡</span>
+          <input class="tpl-fi sm" id="te-age" placeholder="2" style="width:60px" oninput="renderTpl();checkAgeHint()">
+          <button id="btn-age-note" class="pill" onclick="toggleAgeNote()" style="font-size:11px;padding:5px 12px;white-space:nowrap">⚠ 未滿四歲</button>
+          <span id="te-age-hint" style="display:none;font-size:10px;color:var(--amber);font-weight:700">💡 建議勾選</span>
+        </div>
+        <div class="tpl-cfg-row">
+          <span class="tpl-cfg-label">顧問 LINE</span>
+          <input class="tpl-fi md" id="te-lineid" placeholder="your-line-id" oninput="renderTpl()">
+          <span class="tpl-cfg-label" style="min-width:36px">分機</span>
+          <input class="tpl-fi sm" id="te-ext" placeholder="622" oninput="renderTpl()">
+        </div>
+        <div class="tpl-cfg-row">
+          <span class="tpl-cfg-label">顧問姓名</span>
+          <input class="tpl-fi lg" id="te-cname" placeholder="王小明 Ming Wang" oninput="renderTpl()">
+        </div>
+      </div>
+      <!-- Line editor -->
+      <div id="tpl-line-editor-wrap" style="display:flex;flex-direction:column;flex:1">
+        <div class="tpl-editor-toolbar">
+          <button class="tbar-btn" onmousedown="event.preventDefault();efmtL('bold')" title="粗體"><b>B</b></button>
+          <button class="tbar-btn" onmousedown="event.preventDefault();efmtL('italic')" title="斜體"><i>I</i></button>
+          <button class="tbar-btn" onmousedown="event.preventDefault();efmtL('underline')" title="底線"><u>U</u></button>
+          <span class="tbar-sep"></span>
+          <button class="tbar-btn" onmousedown="event.preventDefault();regenLine()" title="重新套用欄位產生">↺ 重新產生</button>
+        </div>
+        <div id="tpl-line-editor" class="tpl-line-editor" contenteditable="true" spellcheck="false"></div>
+      </div>
+      <!-- Email editor -->
+      <div id="tpl-email-editor-wrap" style="display:none;flex-direction:column;flex:1;overflow:hidden;min-height:0">
+        <div class="tpl-editor-toolbar">
+          <button class="tbar-btn" onmousedown="event.preventDefault();efmt('bold')" title="粗體"><b>B</b></button>
+          <button class="tbar-btn" onmousedown="event.preventDefault();efmt('italic')" title="斜體"><i>I</i></button>
+          <button class="tbar-btn" onmousedown="event.preventDefault();efmt('underline')" title="底線"><u>U</u></button>
+          <span class="tbar-sep"></span>
+          <input type="color" id="tbar-color" class="tbar-color" value="#1C2340" onmousedown="saveSelForColor()" onchange="efmtColor(this.value)" title="文字顏色">
+          <span class="tbar-sep"></span>
+          <select class="tbar-select" onchange="efmtSize(this.value)" title="字體大小">
+            <option value="">字級</option>
+            <option value="1">極小</option>
+            <option value="2">小</option>
+            <option value="3">一般</option>
+            <option value="4">大</option>
+            <option value="5">較大</option>
+            <option value="6">特大</option>
+            <option value="7">最大</option>
+          </select>
+          <span class="tbar-sep"></span>
+          <button class="tbar-btn" onmousedown="event.preventDefault();efmtLink()" title="插入連結">🔗</button>
+          <button class="tbar-btn" onmousedown="event.preventDefault();efmtRemoveLink()" title="移除連結">✂</button>
+          <span class="tbar-sep"></span>
+          <button class="tbar-btn" onmousedown="event.preventDefault();regenEmail()" title="重新套用欄位產生">↺ 重新產生</button>
+        </div>
+        <div id="tpl-email-editor" class="tpl-email-editor" contenteditable="true" spellcheck="false"></div>
+      </div>
+    </div>
+    <div class="tpl-foot">
+      <span class="tpl-hint">調整上方欄位後自動更新</span>
+      <button class="btn sm acc" id="btn-open-mail" onclick="openEmailClient()" style="display:none">✉ 開啟郵件</button>
+      <button class="btn sm" id="btn-copy-tpl" onclick="copyTpl()">複製</button>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+<script>
+const DEF={step1:[{id:'s1a',text:'有接聽',line:'有接聽',subLabel:'接聽後狀況',subopts:[{id:'s1a1',text:'目前在忙-稍後再撥',line:'有接聽，對方表示目前在忙，稍後再撥',focusStep:'step4'}]},{id:'s1b',text:'未接聽',line:'未接聽',subLabel:'未接聽類型',subopts:[{id:'s1b1',text:'轉語音信箱（電信）',line:'未接聽，響轉語音信箱（電信）',askVoicemail:true},{id:'s1b2',text:'轉語音信箱（iPhone）',line:'未接聽，響轉語音信箱（iPhone）',askVoicemail:true},{id:'s1b3',text:'馬上斷掉',line:'未接聽，馬上斷掉（疑似被封鎖）'},{id:'s1b4',text:'鈴聲未響完被掛掉',line:'鈴聲未響完即被掛掉（疑似號碼持有人已辨識為騷擾）'}]},{id:'s1c',text:'接聽即掛斷',line:'有接聽，開場後立即掛斷'}],step2:[{id:'s2a',text:'語氣平和',line:'平和語氣聽完開場介紹',group:'接聽後態度'},{id:'s2b',text:'不耐煩',line:'語氣不耐，表示忙碌中',group:'接聽後態度'},{id:'s2c',text:'不願深談',line:'不願深談，快速結束對話',group:'對答意願'},{id:'s2d',text:'有興趣',line:'語氣友善，表現出一定興趣',group:'對答意願'},{id:'s2e',text:'語帶保留',line:'語氣保留，未明確表態',group:'對答意願'},{id:'s2f',text:'急忙掛斷',line:'急忙掛斷，未完整聽完開場',group:'對答意願'}],step3:[{id:'s3g-noreq',text:'明確無需求',isGroup:true,children:[{id:'s3a',text:'大人或小孩皆無（雙重確認）',line:'明確確認家裡大人或小孩皆無需求'},{id:'s3b',text:'判斷為無需求（非直接人）',line:'判斷為無需求（非直接人）\n建議列入無效號碼'},{id:'s3c',text:'明確無法追問',line:'明確無需求，對方不願接受追問'},{id:'s3d',text:'明確要求不打擾',line:'明確表達須進入不打擾名單\n直接響轉'}]},{id:'s3g-timing',text:'時機未到',isGroup:true,children:[{id:'s3e1',text:'個人意願',line:'時機未到（個人意願）'},{id:'s3e2',text:'4歲以下',line:'時機未到（孩子4歲以下，年紀尚小）'},{id:'s3e3',text:'程度很好',line:'時機未到（孩子英文程度已佳，不需補強）'},{id:'s3e4',text:'剛上私中／雙語',line:'時機未到（孩子剛上私立中學或雙語學校）'}]},{id:'s3f',text:'需討論／考慮中',line:'表示需與配偶討論後再決定'},{id:'s3g',text:'待進一步確認體驗意願',line:'確認有體驗課意願，待預約時間'}],step4:[{id:'s4a',text:'N年後',type:'nyr'},{id:'s4b',text:'6個月後',type:'months',n:6},{id:'s4c',text:'3個月後',type:'months',n:3},{id:'s4d',text:'1個月後',type:'months',n:1},{id:'s4e',text:'下週',type:'weeks',n:1},{id:'s4f',text:'待確認',type:'custom',line:'※下次撥出時間待確認'}],timeSlots:[{id:'ts1',text:'午餐後',detail:'14:00～17:00'},{id:'ts2',text:'晚餐後',detail:'18:30～20:00'},{id:'ts3',text:'中午',detail:'12:30／13:15'}]};
+const DEF_KYC_OPTS={listener:['媽媽','爸爸','祖父母','其他'],scene:['車上','安靜','吵雜'],gender:['男生','女生'],decision:['媽媽','爸爸','共同參與'],demo:['Y 摺紙','N'],action:['Line','簡訊','Email']};
+const KYC_OPT_LABELS={listener:'接聽者',scene:'接通場景',gender:'孩童性別',decision:'主導權',demo:'是否摺紙',action:'後續Action'};
+let cfg=JSON.parse(JSON.stringify(DEF)),kOpts=JSON.parse(JSON.stringify(DEF_KYC_OPTS));
+let sel={step1:null,step1sub:null,step1vm:null,step2:[],step3:[],step4:null,step4time:null};
+let nyrVal=2,manualEdit={s1:false,s2:false,s3:false,s4:false};
+let classVal='',classManual=false,introSel=[],prefixSel='',suggestionSel='';
+let demoTime='',demoKTM='',demoKTS='',demoKNM='',demoKNS='';
+const KIDS_TYPE_SUG={4:['Pre'],5:['Pre'],6:['Pre','Star'],7:['Star'],8:['Star'],9:['Star'],10:['Star'],11:['L1'],12:['L1','L2']};
+const TEEN_NUM_SUG={13:['L1'],14:['L1','L2'],15:['L2','L3'],16:['L3'],17:['L3','L4']};
+const L_NUMS=['L1','L2','L3','L4','L5','L6'],L_RARE=['L4','L5','L6'];
+function pad(n){return String(n).padStart(2,'0');}
+function nowStr(){const d=new Date();return`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())}  ${pad(d.getHours())}:${pad(d.getMinutes())}`;}
+function nowKYC(){const d=new Date();return`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;}
+function tick(){document.getElementById('clock').textContent=nowStr();}
+tick();setInterval(tick,30000);
+const TAB_IDS=['call','kyc','cfg-call','cfg-kyc'];
+function switchTab(id){document.querySelectorAll('.tbtn').forEach((b,i)=>b.classList.toggle('on',TAB_IDS[i]===id));document.querySelectorAll('.tpane').forEach(p=>p.classList.remove('on'));document.getElementById('tab-'+id).classList.add('on');}
+function renderStep1(){const body=document.getElementById('cbody-step1');if(!body)return;let h='<div class="pg">';cfg.step1.forEach(it=>{const on=sel.step1===it.id;h+=`<span class="pill${on?' on':''}" onclick="toggleStep1('${it.id}')">${it.text}</span>`;});h+='</div>';cfg.step1.forEach(it=>{if(!it.subopts)return;const parentOn=sel.step1===it.id;h+=`<div class="s3-panel" style="margin-top:6px${parentOn?'':';opacity:.38'}"><div class="s3-group"><div class="s3-group-head"><span class="s3-group-dot"></span><span class="s3-group-label">${it.subLabel||'子選項'}</span></div><div class="s3-group-body" style="pointer-events:${parentOn?'auto':'none'}">`;it.subopts.forEach(sub=>{const on=parentOn&&sel.step1sub===sub.id;h+=`<span class="pill${on?' on':''}" onclick="toggleStep1Sub('${sub.id}')">${sub.text}</span>`;});h+='</div></div></div>';if(parentOn){const sub=it.subopts.find(x=>x.id===sel.step1sub);if(sub&&sub.askVoicemail){h+=`<div class="subrow"><span class="sublabel">本次留言</span><div class="pg"><span class="pill${sel.step1vm==='Y'?' on':''}" onclick="toggleVM('Y')">有留言</span><span class="pill${sel.step1vm==='N'?' on':''}" onclick="toggleVM('N')">未留言</span></div></div>`;}}});body.innerHTML=h;}
+function renderStep2(){const body=document.getElementById('cbody-step2');if(!body)return;const groups={},order=[];cfg.step2.forEach(it=>{const g=it.group||'其他';if(!groups[g]){groups[g]=[];order.push(g);}groups[g].push(it);});let h='<div class="s2-groups">';order.forEach(g=>{h+=`<div><div class="s2-glabel">${g}</div><div class="pg">`;groups[g].forEach(it=>{const on=sel.step2.includes(it.id);h+=`<span class="pill${on?' on':''}" onclick="toggleStep2('${it.id}')">${it.text}</span>`;});h+='</div></div>';});h+='</div>';body.innerHTML=h;}
+function renderStep3(){const body=document.getElementById('cbody-step3');if(!body)return;const groups=[],leaves=[];cfg.step3.forEach(it=>{if(it.isGroup)groups.push(it);else leaves.push(it);});let h='<div class="s3-panel">';groups.forEach(g=>{h+=`<div class="s3-group"><div class="s3-group-head"><span class="s3-group-dot"></span><span class="s3-group-label">${g.text}</span></div><div class="s3-group-body">`;(g.children||[]).forEach(ch=>{const on=sel.step3.includes(ch.id);h+=`<span class="pill${on?' on':''}" onclick="toggleStep3Leaf('${ch.id}')">${ch.text}</span>`;});h+='</div></div>';});h+='</div>';if(leaves.length){h+='<div class="s3-leaf-row">';leaves.forEach(it=>{const on=sel.step3.includes(it.id);h+=`<span class="pill${on?' on':''}" onclick="toggleStep3Leaf('${it.id}')">${it.text}</span>`;});h+='</div>';}body.innerHTML=h;}
+function renderStep4(){const body=document.getElementById('cbody-step4');if(!body)return;let h='<div class="pg">';cfg.step4.forEach(it=>{const on=sel.step4===it.id;if(it.type==='nyr'){h+=`<span class="nyr-pill${on?' on':''}" onclick="toggleStep4('${it.id}')"><div class="nyr-pill-top"><div class="nyr-ctrl"><button class="nyr-btn" onclick="event.stopPropagation();changeNyr(-1)">−</button><span class="nyr-n">${nyrVal}</span><button class="nyr-btn" onclick="event.stopPropagation();changeNyr(1)">＋</button></div><span class="nyr-label">年後</span></div><span class="nyr-date">${dateOffset(it)}</span></span>`;}else if(it.type==='custom'){h+=`<span class="dpill${on?' on':''}" onclick="toggleStep4('${it.id}')"><span class="dpill-label">${it.text}</span><span class="dpill-date">—</span></span>`;}else{h+=`<span class="dpill${on?' on':''}" onclick="toggleStep4('${it.id}')"><span class="dpill-label">${it.text}</span><span class="dpill-date">${dateOffset(it)}</span></span>`;}});h+='</div>';if(cfg.timeSlots&&cfg.timeSlots.length){h+=`<div class="subrow"><span class="sublabel">時段</span><div class="pg">`;cfg.timeSlots.forEach(t=>{const on=sel.step4time===t.id;h+=`<span class="dpill${on?' on':''}" onclick="toggleTimeSlot('${t.id}')"><span class="dpill-label">${t.text}</span><span class="dpill-date">${t.detail}</span></span>`;});h+='</div></div>';}body.innerHTML=h;}
+function renderAllSteps(){renderStep1();renderStep2();renderStep3();renderStep4();}
+function toggleStep1(id){sel.step1=sel.step1===id?null:id;const item=cfg.step1.find(x=>x.id===sel.step1);if(!item||!item.subopts){sel.step1sub=null;sel.step1vm=null;}const hasAny=!!sel.step1,isAnswered=sel.step1==='s1a';document.getElementById('card-step2').classList.toggle('dim',!isAnswered);document.getElementById('card-step3').classList.toggle('dim',!isAnswered);const ls2=document.getElementById('logsec-s2');if(ls2)ls2.classList.toggle('dim',!isAnswered);if(!hasAny){sel.step2=[];sel.step3=[];renderStep2();renderStep3();updateSABtn('step2');updateSABtn('step3');}else if(!isAnswered){sel.step2=[];sel.step3=[];renderStep2();renderStep3();updateSABtn('step2');updateSABtn('step3');}document.getElementById('n1').classList.toggle('on',!!sel.step1);document.getElementById('n2').classList.toggle('on',sel.step2.length>0);document.getElementById('n3').classList.toggle('on',sel.step3.length>0);renderStep1();updateSection('s1');updateSection('s2');updateSection('s3');}
+function toggleStep1Sub(id){sel.step1sub=sel.step1sub===id?null:id;const s1=cfg.step1.find(x=>x.id===sel.step1);const sub=s1&&s1.subopts?s1.subopts.find(x=>x.id===sel.step1sub):null;if(!sub||!sub.askVoicemail)sel.step1vm=null;renderStep1();updateSection('s1');if(sub&&sub.focusStep){const el=document.getElementById('card-'+sub.focusStep);if(el)setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'nearest'}),60);}}
+function toggleVM(val){sel.step1vm=sel.step1vm===val?null:val;renderStep1();updateSection('s1');}
+function toggleStep2(id){const i=sel.step2.indexOf(id);if(i>=0)sel.step2.splice(i,1);else sel.step2.push(id);renderStep2();document.getElementById('n2').classList.toggle('on',sel.step2.length>0);updateSection('s2');updateSABtn('step2');}
+function toggleStep3Leaf(id){const i=sel.step3.indexOf(id);if(i>=0)sel.step3.splice(i,1);else sel.step3.push(id);renderStep3();document.getElementById('n3').classList.toggle('on',sel.step3.length>0);updateSection('s3');updateSABtn('step3');}
+function toggleStep4(id){sel.step4=sel.step4===id?null:id;renderStep4();document.getElementById('n4').classList.toggle('on',!!sel.step4);updateSection('s4');}
+function toggleTimeSlot(id){sel.step4time=sel.step4time===id?null:id;renderStep4();document.getElementById('n4').classList.toggle('on',!!(sel.step4||sel.step4time));updateSection('s4');}
+function changeNyr(delta){nyrVal=Math.max(1,Math.min(10,nyrVal+delta));renderStep4();if(sel.step4==='s4a')updateSection('s4');}
+function dateOffset(item){const d=new Date();if(item.type==='months')d.setMonth(d.getMonth()+item.n);else if(item.type==='weeks')d.setDate(d.getDate()+item.n*7);else if(item.type==='nyr')d.setFullYear(d.getFullYear()+nyrVal);return`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())}`;}
+function calcLine(item){if(item.type==='custom')return item.line;return'※下次建議撥出時間：'+dateOffset(item);}
+function composeSection(which){if(which==='s1'){if(!sel.step1)return'';const i1=cfg.step1.find(x=>x.id===sel.step1);if(!i1)return'';let out='【'+i1.text+'】';if(i1.subopts&&sel.step1sub){const sub=i1.subopts.find(x=>x.id===sel.step1sub);if(sub){out+='\n'+sub.line;if(sub.askVoicemail&&sel.step1vm)out+='\n本次'+(sel.step1vm==='Y'?'有':'未')+'留言';}}return out;}if(which==='s2'){const i2s=sel.step2.map(id=>cfg.step2.find(x=>x.id===id)).filter(Boolean);return i2s.map(x=>'【'+(x.group||x.text)+'】'+x.line).join('\n');}if(which==='s3'){if(sel.step1!=='s1a')return'';const lines=[];cfg.step3.forEach(it=>{if(it.isGroup)(it.children||[]).forEach(ch=>{if(sel.step3.includes(ch.id))lines.push('【表達程度-'+it.text+'】'+ch.line);});else if(sel.step3.includes(it.id))lines.push('【表達程度】'+it.line);});return lines.join('\n');}if(which==='s4'){const i4=sel.step4?cfg.step4.find(x=>x.id===sel.step4):null;const ts=sel.step4time&&cfg.timeSlots?cfg.timeSlots.find(x=>x.id===sel.step4time):null;if(!i4&&!ts)return'';if(!i4&&ts)return'【下次Call out】（'+ts.text+' '+ts.detail+'）';let line=calcLine(i4);if(ts)line+='（'+ts.text+' '+ts.detail+'）';return'【下次Call out】'+line;}return'';}
+function updateSection(which){if(manualEdit[which])return;const ta=document.getElementById('log-'+which);if(!ta)return;ta.value=composeSection(which);updateCombined();}
+function updateCombined(){const parts=['s1','s2','s3','s4'].map(w=>{const ta=document.getElementById('log-'+w);return ta?ta.value.trim():'';}).filter(Boolean);const c=document.getElementById('log-combined');if(!c)return;if(parts.length||prefixSel||suggestionSel){const d=new Date();const dt=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;const pfx=prefixSel?prefixSel+'\n':'';const sug=suggestionSel?suggestionSel+'\n':'';c.value=pfx+sug+parts.join('\n')+'\n【'+dt+'】';}else{c.value='';}updateRelease();}
+function onSectionEdit(which){manualEdit[which]=true;const badge=document.getElementById('edit-badge-'+which);if(badge)badge.classList.add('show');updateCombined();}
+function resetSection(which){manualEdit[which]=false;const badge=document.getElementById('edit-badge-'+which);if(badge)badge.classList.remove('show');updateSection(which);}
+function copyLog(){const c=document.getElementById('log-combined');if(!c)return;navigator.clipboard.writeText(c.value).then(()=>flash('btn-copy-log','已複製 ✓','複製'));}
+function toggleSelectAll(step){if(step==='step2'){const hasAny=sel.step2.length>0;sel.step2=hasAny?[]:cfg.step2.map(x=>x.id);renderStep2();document.getElementById('n2').classList.toggle('on',sel.step2.length>0);updateSection('s2');updateSABtn('step2');}else if(step==='step3'){const allLeafIds=[];cfg.step3.forEach(it=>{if(it.isGroup)(it.children||[]).forEach(ch=>allLeafIds.push(ch.id));else allLeafIds.push(it.id);});const hasAny=sel.step3.length>0;sel.step3=hasAny?[...[]]:allLeafIds;renderStep3();document.getElementById('n3').classList.toggle('on',sel.step3.length>0);updateSection('s3');updateSABtn('step3');}}
+function updateSABtn(step){const btn=document.getElementById(step==='step2'?'sa-s2':'sa-s3');if(!btn)return;const hasAny=step==='step2'?sel.step2.length>0:sel.step3.length>0;btn.textContent=hasAny?'取消全選':'全選';}
+function clearLog(){prefixSel='';suggestionSel='';buildPrefixPills();syncSuggestionPills();sel={step1:null,step1sub:null,step1vm:null,step2:[],step3:[],step4:null,step4time:null};manualEdit={s1:false,s2:false,s3:false,s4:false};['s1','s2','s3','s4'].forEach(w=>{const badge=document.getElementById('edit-badge-'+w),ta=document.getElementById('log-'+w);if(badge)badge.classList.remove('show');if(ta)ta.value='';});const c=document.getElementById('log-combined');if(c)c.value='';const r=document.getElementById('log-release');if(r)r.value='';renderAllSteps();['n1','n2','n3','n4'].forEach(id=>document.getElementById(id).classList.remove('on'));document.getElementById('card-step2').classList.add('dim');document.getElementById('card-step3').classList.add('dim');updateSABtn('step2');updateSABtn('step3');}
+function buildRG(id,name,opts){const el=document.getElementById(id);if(!el)return;el.innerHTML=opts.map(o=>`<label><input type="radio" name="${name}" value="${o}" onchange="livePreview()"><span>${o}</span></label>`).join('');}
+function buildAllRG(){buildRG('rg-listener','listener',kOpts.listener);buildRG('rg-scene','scene',kOpts.scene);buildRG('rg-gender','gender',kOpts.gender);buildRG('rg-decision','decision',kOpts.decision);buildRG('rg-demo','demo',kOpts.demo);buildRG('rg-action','action',kOpts.action);}
+function rv(name){const el=document.querySelector(`input[name="${name}"]:checked`);return el?el.value:'';}
+function gv(id){const el=document.getElementById(id);return el?el.value.trim():'';}
+function buildIntroPills(){const pg=document.getElementById('pg-intro');if(!pg)return;pg.innerHTML=['Line','Email','尚未'].map(o=>{const on=introSel.includes(o);return`<span class="pill${on?' on':''}" onclick="toggleIntro('${o}')">${o}</span>`;}).join('');}
+function toggleIntro(val){if(val==='尚未'){introSel=introSel.includes('尚未')?[]:['尚未'];}else{introSel=introSel.filter(x=>x!=='尚未');const i=introSel.indexOf(val);if(i>=0)introSel.splice(i,1);else introSel.push(val);}buildIntroPills();livePreview();}
+function introText(){if(introSel.includes('尚未'))return'尚未丟介紹';if(introSel.length===0)return'';return'已丟 '+introSel.join(' & ')+' 介紹';}
+function pickClass(el){document.querySelectorAll('.cpill').forEach(p=>p.classList.remove('on'));classVal=el.dataset.v;el.classList.add('on');classManual=true;livePreview();}
+function ageToClass(age){const n=parseInt(age);if(isNaN(n)||n<1)return null;if(n<=2)return'幼幼班';if(n===3)return'小班';if(n===4)return'中班';if(n===5)return'大班';if(n===6)return'小1';if(n===7)return'小2';if(n===8)return'小3';if(n===9)return'小4';if(n===10)return'小5';if(n===11)return'小6';if(n===12)return'國一';if(n===13)return'國二';if(n===14)return'國三';if(n===15)return'高一';if(n===16)return'高二';if(n===17)return'高三';return null;}
+function onAgeInput(){const suggested=ageToClass(document.getElementById('k-age').value);document.querySelectorAll('.cpill').forEach(p=>p.classList.remove('suggested'));const hint=document.getElementById('suggest-hint');if(suggested){const pill=document.querySelector(`.cpill[data-v="${suggested}"]`);if(pill){pill.classList.add('suggested');if(hint)hint.classList.add('show');}}else{if(hint)hint.classList.remove('show');}livePreview();}
+function buildDemoTimeGrid(){const g=document.getElementById('demo-tg');if(!g)return;g.innerHTML='';for(let h=13;h<=21;h++){const col=document.createElement('div');col.className='demo-tc';const bh=document.createElement('div');bh.className='demo-th';bh.textContent=h;bh.dataset.h=h;bh.addEventListener('click',()=>{const curH=demoTime?parseInt(demoTime):0;demoTime=curH===h?'':h+':00';refreshDemoTG();livePreview();});const bm=document.createElement('div');bm.className='demo-tm';bm.textContent=':30';bm.dataset.h=h;bm.addEventListener('click',()=>{const curH=demoTime?parseInt(demoTime):0,isHalf=demoTime&&demoTime.endsWith(':30');if(curH===h&&isHalf)demoTime=h+':00';else demoTime=h+':30';refreshDemoTG();livePreview();});col.appendChild(bh);col.appendChild(bm);g.appendChild(col);}}
+function refreshDemoTG(){const curH=demoTime?parseInt(demoTime):0,half=demoTime&&demoTime.endsWith(':30');document.querySelectorAll('#demo-tg .demo-th').forEach(b=>b.classList.toggle('sel',parseInt(b.dataset.h)===curH&&curH>0));document.querySelectorAll('#demo-tg .demo-tm').forEach(b=>b.classList.toggle('sel',half&&parseInt(b.dataset.h)===curH));const disp=document.getElementById('demo-time-display');if(disp)disp.textContent=demoTime||'—';}
+function buildDemoLevelGrid(){const tRow=document.getElementById('demo-lv-type');if(!tRow)return;tRow.innerHTML='';[{label:'Pre',val:'Pre'},{label:'Star',val:'Star'}].forEach(item=>{const b=document.createElement('div');b.className='lv';b.textContent=item.label;b.dataset.val=item.val;b.addEventListener('click',()=>clickDemoKT(item.val));tRow.appendChild(b);});const nRow=document.getElementById('demo-lv-num');if(!nRow)return;nRow.innerHTML='';L_NUMS.forEach(l=>{const b=document.createElement('div');b.className='lv'+(L_RARE.includes(l)?' rare':'');b.textContent=l;b.dataset.val=l;b.addEventListener('click',()=>clickDemoKN(l));nRow.appendChild(b);});refreshDemoLevel();}
+function clickDemoKT(val){const order=['Pre','Star'],im=order.indexOf(demoKTM),iv=order.indexOf(val);if(val===demoKTM){if(demoKTS)demoKTS='';else demoKTM='';}else if(val===demoKTS){demoKTS='';}else if(demoKTM===''){demoKTM=val;}else if(Math.abs(im-iv)===1){demoKTM=order[Math.min(im,iv)];demoKTS=order[Math.max(im,iv)];}else{demoKTM=val;demoKTS='';}refreshDemoLevel();livePreview();}
+function clickDemoKN(val){const L=L_NUMS,im=L.indexOf(demoKNM),iv=L.indexOf(val);if(val===demoKNM){if(demoKNS)demoKNS='';else demoKNM='';}else if(val===demoKNS){demoKNS='';}else if(demoKNM===''){demoKNM=val;}else if(Math.abs(im-iv)===1){demoKNM=L[Math.min(im,iv)];demoKNS=L[Math.max(im,iv)];}else{demoKNM=val;demoKNS='';}refreshDemoLevel();livePreview();}
+function onDemoAgeInput(){refreshDemoLevel();livePreview();}
+function refreshDemoLevel(){const age=parseInt(document.getElementById('k-demo-age').value)||0;let tSug=[],nSug=[];if(age>=4&&age<=10){const s=KIDS_TYPE_SUG[age]||[];tSug=s.filter(x=>!x.startsWith('L'));nSug=s.filter(x=>x.startsWith('L'));}else if(age===11){nSug=['L1'];}else if(age===12){nSug=['L1','L2'];}else if(age>=13&&age<=17){nSug=TEEN_NUM_SUG[age]||[];}const typeRow=document.getElementById('demo-lv-type');if(typeRow)typeRow.querySelectorAll('.lv').forEach(b=>{const v=b.dataset.val,isSel=v===demoKTM,isSub=v===demoKTS,isSug=tSug.includes(v)&&!isSel&&!isSub;b.className='lv'+(isSel?' sel':isSub?' sub':'')+(isSug?' sug':'');});const numRow=document.getElementById('demo-lv-num');if(numRow)numRow.querySelectorAll('.lv').forEach(b=>{const v=b.dataset.val,isSel=v===demoKNM,isSub=v===demoKNS,isRare=L_RARE.includes(v),isSug=nSug.includes(v)&&!isSel&&!isSub;b.className='lv'+(isRare?' rare':'')+(isSel?' sel':isSub?' sub':'')+(isSug?' sug':'');});const hint=document.getElementById('demo-lv-hint');if(hint)hint.textContent=computeDemoLevel()?'目前程度：'+computeDemoLevel():'';const ageHint=document.getElementById('demo-age-hint');if(ageHint)ageHint.style.display=(tSug.length||nSug.length)?'inline':'none';}
+function computeDemoLevel(){let typeStr='';if(demoKTM==='Pre'&&demoKTS==='Star')typeStr='Prestarter-Starter';else if(demoKTM==='Pre')typeStr='Prestarter';else if(demoKTM==='Star')typeStr='Starter';const numStr=demoKNM?(demoKNM+(demoKNS?'-'+demoKNS:'')):''  ;if(typeStr&&numStr)return typeStr+'-'+numStr;return typeStr||numStr;}
+function livePreview(){const timeStr=[gv('k-call-date'),gv('k-call-dur')?`(${gv('k-call-dur')})`:''].filter(Boolean).join(' ');const childStr=[rv('gender'),gv('k-age')?gv('k-age')+'歲':'',gv('k-school'),classVal].filter(Boolean).join('/');const demoLv=computeDemoLevel();const demoAgeLv=[gv('k-demo-age')?gv('k-demo-age')+'歲':'',demoLv].filter(Boolean).join(' / ');const out=[`【接聽者】 ${rv('listener')}`,`【接通時間(時長)】 ${timeStr}`,`【接通場景】 ${rv('scene')}`,``,`【孩童性別/年齡/學校/程度】 ${childStr}`,`【課外/安親/才藝】 ${gv('k-extra')}`,`【學習目標/規劃/困難點】 ${gv('k-goal')}`,``,`【競品/留存動機】 ${gv('k-comp')}`,`【個性/指定】 ${gv('k-personality')}`,``,`【生活樣貌】 ${gv('k-lifestyle')}`,`【可學習時間/上課頻率】 ${gv('k-schedule')}`,``,`【是否已丟介紹】 ${introText()}`,``,`【主導權】 ${rv('decision')}`,`【兄弟姐妹】 ${gv('k-siblings')}`,`【Demo 時間】 ${demoTime||''}`,`【Demo 年齡/程度】 ${demoAgeLv}`,`【Demo 是否摺紙】 ${rv('demo')}`,`【檢定】 ${gv('k-cert')}`,`【設備】 ${gv('k-device')}`,`【孩子英文名】 ${gv('k-ename')}`,`【後續Action】 ${rv('action')}`,`【補充/男女老師】 ${gv('k-teacher')}`,``,`【特別異議】 ${gv('k-objection')}`].join('\n');document.getElementById('kyc-preview').value=out;}
+function copyKYC(){navigator.clipboard.writeText(document.getElementById('kyc-preview').value).then(()=>flash('btn-copy-kyc','已複製 ✓','複製'));}
+function clearKYC(){document.querySelectorAll('#tab-kyc input[type=text],#tab-kyc input[type=number],#tab-kyc textarea').forEach(e=>e.value='');document.querySelectorAll('#tab-kyc input[type=radio]').forEach(e=>e.checked=false);classVal='';classManual=false;document.querySelectorAll('.cpill').forEach(p=>{p.classList.remove('on');p.classList.remove('suggested');});const hint=document.getElementById('suggest-hint');if(hint)hint.classList.remove('show');introSel=[];buildIntroPills();demoTime='';demoKTM='';demoKTS='';demoKNM='';demoKNS='';refreshDemoTG();refreshDemoLevel();document.getElementById('k-call-date').value=nowKYC();livePreview();}
+function renderCfgCall(){const root=document.getElementById('cfg-call-root');root.innerHTML='';
+// ── 前贅詞 ──
+{const pfxWrap=document.createElement('div');pfxWrap.className='csec';pfxWrap.innerHTML=`<div class="csh">前贅詞選項 <span style="font-size:10px;font-weight:400;color:var(--t3)">（顯示於接聽狀態之前）</span></div><div class="csb">${cfgPrefixOpts.map((t,i)=>`<div class="crow"><span class="clbl">文字</span><input value="${esc(t)}" oninput="cfgPrefixOpts[${i}]=this.value;syncPrefixPills()"><button class="dbtn" onclick="cfgPrefixOpts.splice(${i},1);renderCfgCall();syncPrefixPills()">刪</button></div>`).join('')}<button class="abtn" onclick="cfgPrefixOpts.push('新前贅詞');renderCfgCall();syncPrefixPills()">＋ 新增</button></div>`;root.appendChild(pfxWrap);}
+// ── 建議事項 ──
+{const sugWrap=document.createElement('div');sugWrap.className='csec';sugWrap.innerHTML=`<div class="csh">建議事項選項 <span style="font-size:10px;font-weight:400;color:var(--t3)">（前贅詞之後，接聽狀態之前）</span></div><div class="csb">${cfgSuggestOpts.map((t,i)=>`<div class="crow"><span class="clbl">文字</span><input value="${esc(t)}" oninput="cfgSuggestOpts[${i}]=this.value;syncSuggestionPills()"><button class="dbtn" onclick="cfgSuggestOpts.splice(${i},1);renderCfgCall();syncSuggestionPills()">刪</button></div>`).join('')}<button class="abtn" onclick="cfgSuggestOpts.push('新建議事項');renderCfgCall();syncSuggestionPills()">＋ 新增</button></div>`;root.appendChild(sugWrap);}
+// ── Step 1–4 ──
+['step1','step2','step3','step4'].forEach((step,si)=>{const wrap=document.createElement('div');wrap.className='csec';wrap.innerHTML=`<div class="csh">Step ${si+1}・${['接聽狀態','接聽後態度','表達程度','下次 Call out'][si]} <span style="font-size:10px;font-weight:400;color:var(--t3)">⠿ 可拖拉排序</span></div><div class="csb" id="cfg-csb-${step}">${cfg[step].map((it,idx)=>cfgRow(step,idx,it)).join('')}<button class="abtn" onclick="addCallItem('${step}')">＋ 新增選項</button></div>`;root.appendChild(wrap);});if(cfg.timeSlots){const wrap=document.createElement('div');wrap.className='csec';wrap.innerHTML=`<div class="csh">建議時段</div><div class="csb">${cfg.timeSlots.map((t,i)=>`<div class="crow"><span class="clbl">標籤</span><input value="${esc(t.text)}" oninput="cfg.timeSlots[${i}].text=this.value;renderStep4()"><span class="clbl">說明</span><input value="${esc(t.detail)}" oninput="cfg.timeSlots[${i}].detail=this.value;renderStep4()"><button class="dbtn" onclick="cfg.timeSlots.splice(${i},1);renderCfgCall();renderStep4()">刪</button></div>`).join('')}<button class="abtn" onclick="cfg.timeSlots.push({id:'ts'+Date.now(),text:'新時段',detail:'xx:xx～xx:xx'});renderCfgCall();renderStep4()">＋</button></div>`;root.appendChild(wrap);}}
+function cfgRow(step,idx,it){
+  let extra='';
+  if(step==='step4'){
+    if(it.type==='months'||it.type==='weeks')extra=`<span class="clbl">${it.type==='months'?'月':'週'}數</span><input type="number" min="1" max="24" value="${it.n||1}" style="width:60px;flex:none" oninput="cfg['${step}'][${idx}].n=+this.value;renderStep4()">`;
+    else if(it.type==='custom')extra=`<span class="clbl">記錄</span><input value="${esc(it.line||'')}" oninput="cfg['${step}'][${idx}].line=this.value">`;
+    else extra=`<span class="clbl" style="opacity:.5">（N 年後）</span>`;
+  }else if(step==='step2'){
+    extra=`<span class="clbl">分組</span><input value="${esc(it.group||'')}" style="width:90px;flex:none" oninput="cfg['${step}'][${idx}].group=this.value;renderStep2()"><span class="clbl">記錄</span><input value="${esc(it.line||'')}" oninput="cfg['${step}'][${idx}].line=this.value">`;
+  }else{
+    extra=`<span class="clbl">記錄</span><input value="${esc(it.line||'')}" oninput="cfg['${step}'][${idx}].line=this.value">`;
+  }
+  // Sub-options expansion for step1 (subopts) and step3 groups (children)
+  let subHtml='';
+  if(step==='step1'&&it.subopts){
+    const rows=(it.subopts||[]).map((sub,si)=>`<div class="crow" style="background:var(--bbg);margin-bottom:4px"><span class="clbl" style="color:var(--blue)">↳</span><span class="clbl">標籤</span><input value="${esc(sub.text)}" oninput="cfg.step1[${idx}].subopts[${si}].text=this.value;renderStep1()"><span class="clbl">記錄</span><input value="${esc(sub.line||'')}" oninput="cfg.step1[${idx}].subopts[${si}].line=this.value"><button class="dbtn" onclick="cfg.step1[${idx}].subopts.splice(${si},1);renderCfgCall();renderStep1()">刪</button></div>`).join('');
+    subHtml=`<div class="csub-group"><div class="csub-group-label">子選項（${esc(it.subLabel||'子選項')}）</div>${rows}<button class="abtn" onclick="if(!cfg.step1[${idx}].subopts)cfg.step1[${idx}].subopts=[];cfg.step1[${idx}].subopts.push({id:'x'+Date.now(),text:'新子選項',line:'新子選項文字'});renderCfgCall();renderStep1()">＋ 新增子選項</button></div>`;
+  }else if(step==='step3'&&it.isGroup){
+    const rows=(it.children||[]).map((ch,ci)=>`<div class="crow" style="background:var(--bbg);margin-bottom:4px"><span class="clbl" style="color:var(--blue)">↳</span><span class="clbl">標籤</span><input value="${esc(ch.text)}" oninput="cfg.step3[${idx}].children[${ci}].text=this.value;renderStep3()"><span class="clbl">記錄</span><input value="${esc(ch.line||'')}" oninput="cfg.step3[${idx}].children[${ci}].line=this.value"><button class="dbtn" onclick="cfg.step3[${idx}].children.splice(${ci},1);renderCfgCall();renderStep3()">刪</button></div>`).join('');
+    subHtml=`<div class="csub-group"><div class="csub-group-label">群組內選項</div>${rows}<button class="abtn" onclick="if(!cfg.step3[${idx}].children)cfg.step3[${idx}].children=[];cfg.step3[${idx}].children.push({id:'x'+Date.now(),text:'新選項',line:'新選項文字'});renderCfgCall();renderStep3()">＋ 新增群組選項</button></div>`;
+  }
+  return `<div class="cfg-drag-item" draggable="true" data-step="${step}" data-idx="${idx}" ondragstart="cfgDragStart(event)" ondragover="cfgDragOver(event)" ondrop="cfgDrop(event)" ondragend="cfgDragEnd(event)"><div class="crow"><span class="cfg-drag-handle" title="拖拉排序">⠿</span><span class="clbl">標籤</span><input value="${esc(it.text)}" oninput="cfg['${step}'][${idx}].text=this.value;renderStep('${step}')">${extra}<button class="dbtn" onclick="delCallItem('${step}',${idx})">刪</button></div>${subHtml}</div>`;
+}
+function renderStep(step){if(step==='step1')renderStep1();else if(step==='step2')renderStep2();else if(step==='step3')renderStep3();else if(step==='step4')renderStep4();}
+function addCallItem(step){cfg[step].push({id:'x'+Date.now(),text:'新選項',line:'新選項文字'});renderCfgCall();renderStep(step);}
+function delCallItem(step,idx){cfg[step].splice(idx,1);renderCfgCall();renderStep(step);}
+function renderCfgKYC(){const root=document.getElementById('cfg-kyc-root');root.innerHTML='';Object.keys(kOpts).forEach(key=>{const sec=document.createElement('div');sec.className='kcfg-sec';sec.innerHTML=`<div class="kcfg-label">${KYC_OPT_LABELS[key]||key}</div><div class="opt-wrap">${kOpts[key].map((o,oi)=>`<span class="opt-chip"><input value="${esc(o)}" oninput="kOpts['${key}'][${oi}]=this.value;buildRG('rg-${key}','${key}',kOpts['${key}']);livePreview()"><span class="rx" onclick="delKOpt('${key}',${oi})">×</span></span>`).join('')}<button class="add-opt" onclick="addKOpt('${key}')">＋</button></div>`;root.appendChild(sec);});}
+function addKOpt(key){kOpts[key].push('新選項');renderCfgKYC();buildRG('rg-'+key,key,kOpts[key]);livePreview();}
+function delKOpt(key,idx){kOpts[key].splice(idx,1);renderCfgKYC();buildRG('rg-'+key,key,kOpts[key]);livePreview();}
+function applyCallData(d){const src=d.step1?d:(d.call||null);if(!src)throw new Error('找不到 step1');cfg={step1:src.step1||DEF.step1,step2:src.step2||DEF.step2,step3:src.step3||DEF.step3,step4:src.step4||DEF.step4,timeSlots:src.timeSlots||DEF.timeSlots||[]};if(Array.isArray(d.prefixOpts)){cfgPrefixOpts=d.prefixOpts.slice();}if(Array.isArray(d.suggestOpts)){cfgSuggestOpts=d.suggestOpts.slice();}renderAllSteps();renderCfgCall();syncPrefixPills();syncSuggestionPills();}
+function applyKYCData(d){const src=d.listener?d:(d.kycOptions||null);if(!src)throw new Error('找不到 listener');const clean={};Object.keys(src).forEach(k=>{if(k!=='_comment')clean[k]=src[k];});kOpts=Object.assign({},DEF_KYC_OPTS,clean);buildAllRG();renderCfgKYC();livePreview();}
+function showCallExport(){document.getElementById('json-ta').value=JSON.stringify({prefixOpts:cfgPrefixOpts,suggestOpts:cfgSuggestOpts,step1:cfg.step1,step2:cfg.step2,step3:cfg.step3,step4:cfg.step4,timeSlots:cfg.timeSlots},null,2);}
+function applyImportTA(){const val=(document.getElementById('json-ta').value||'').trim();if(!val){alert('請先按「匯出 JSON」產生內容，或貼入 JSON 文字後再套用。');return;}try{applyCallData(JSON.parse(val));alert('套用成功');}catch(e){alert('JSON格式錯誤：'+e.message);}}
+function importCallFile(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{document.getElementById('json-ta').value=e.target.result;applyImportTA();};r.readAsText(f);ev.target.value='';}
+function resetCall(){confirmInline('call-reset-confirm',()=>{applyCallData(DEF);showStatus('call','✅ 已還原內建預設');});}
+function showKYCExport(){const out={};Object.keys(kOpts).forEach(k=>{if(k!=='_comment')out[k]=kOpts[k];});document.getElementById('kyc-json-ta').value=JSON.stringify(out,null,2);}
+function applyKYCImportTA(){const val=(document.getElementById('kyc-json-ta').value||'').trim();if(!val){alert('請先按「匯出 KYC 選項」產生內容，或貼入 JSON 文字後再套用。');return;}try{applyKYCData(JSON.parse(val));alert('套用成功');}catch(e){alert('JSON格式錯誤：'+e.message);}}
+function importKYCFile(ev){const f=ev.target.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{document.getElementById('kyc-json-ta').value=e.target.result;applyKYCImportTA();};r.readAsText(f);ev.target.value='';}
+function resetKYC(){confirmInline('kyc-reset-confirm',()=>{applyKYCData(DEF_KYC_OPTS);showStatus('kyc','✅ 已還原內建預設');});}
+function confirmInline(id,cb){const el=document.getElementById(id);if(!el)return;el.style.display='inline-flex';el._cb=cb;}
+function confirmYes(id){const el=document.getElementById(id);if(el&&el._cb){el._cb();el.style.display='none';}}
+function confirmNo(id){const el=document.getElementById(id);if(el)el.style.display='none';}
+function showStatus(which,msg){const id=which==='call'?'call-status':'kyc-status';const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.style.display='inline';setTimeout(()=>el.style.display='none',4000);}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;');}
+function flash(id,done,orig){const b=document.getElementById(id);if(!b)return;b.textContent=done;b.classList.add('ok');setTimeout(()=>{b.textContent=orig;b.classList.remove('ok');},2000);}
+function initApp(){renderAllSteps();buildAllRG();buildIntroPills();buildPrefixPills();buildSuggestionPills();buildDemoTimeGrid();buildDemoLevelGrid();renderCfgCall();renderCfgKYC();renderCfgPrefix();document.getElementById('k-call-date').value=nowKYC();livePreview();
+  // mark dirty when user edits Line editor
+  const led=document.getElementById('tpl-line-editor');
+  if(led)led.addEventListener('input',()=>{lineEditorDirty=true;});
+}
+
+/* ===== 試讀日期 / 時間 Picker ===== */
+let tlDate='', tlTime='';
+const TL_WEEKDAYS=['日','一','二','三','四','五','六'];
+
+function buildTlDateGrid(){
+  const el=document.getElementById('tl-date-grid');
+  if(!el)return;
+  const today=new Date();today.setHours(0,0,0,0);
+  // Find Monday of current week
+  const dow=today.getDay(); // 0=Sun
+  const daysFromMon=dow===0?6:dow-1;
+  const weekMon=new Date(today);weekMon.setDate(today.getDate()-daysFromMon);
+  // Build 5 weeks starting from weekMon
+  let h='';
+  for(let w=0;w<5;w++){
+    let rowH='';
+    for(let d=0;d<7;d++){
+      const date=new Date(weekMon);date.setDate(weekMon.getDate()+w*7+d);
+      const key=`${date.getMonth()+1}/${date.getDate()}`;
+      const wd=TL_WEEKDAYS[date.getDay()];
+      const isPast=date<=today;
+      const on=tlDate===key&&!isPast?' on':'';
+      const dayClass=(date.getDay()===6?' sat':date.getDay()===0?' sun':'')+' tl-dc'+(isPast?' past':on);
+      rowH+=`<div class="${dayClass}"${isPast?'':` onclick="pickTlDate('${key}')"`}>
+        <span class="tl-dc-wd">${wd}</span>
+        <span class="tl-dc-d">${date.getDate()}</span>
+        <span class="tl-dc-m">${date.getMonth()+1}月</span>
+      </div>`;
+    }
+    h+=`<div class="tl-week-row">${rowH}</div>`;
+  }
+  el.innerHTML=h;
+  const disp=document.getElementById('tl-date-display');
+  if(disp)disp.textContent=tlDate||'尚未選擇';
+}
+
+function buildTlTimeGrid(){
+  const el=document.getElementById('tl-time-grid');
+  if(!el)return;
+  let h='';
+  for(let hr=13;hr<=21;hr++){
+    for(let mn=0;mn<60;mn+=30){
+      const key=`${pad(hr)}:${pad(mn)}`;
+      const on=tlTime===key?' on':'';
+      h+=`<div class="tl-tc${on}" onclick="pickTlTime('${key}')">
+        <span class="tl-tc-h">${pad(hr)}</span>
+        <span class="tl-tc-m">:${pad(mn)}</span>
+      </div>`;
+    }
+  }
+  el.innerHTML=h;
+  const disp=document.getElementById('tl-time-display');
+  if(disp)disp.textContent=tlTime||'尚未選擇';
+}
+
+function pickTlDate(key){tlDate=tlDate===key?'':key;buildTlDateGrid();renderTpl();}
+function pickTlTime(key){tlTime=tlTime===key?'':key;buildTlTimeGrid();renderTpl();}
+
+/* ===== Email HTML builder + .eml download ===== */
+/* ===== 匯入 EML / MSG ===== */
+function decodeBase64Utf8(s){
+  const b64=s.replace(/\s/g,'');
+  try{
+    const bytes=Uint8Array.from(atob(b64),c=>c.charCodeAt(0));
+    return new TextDecoder('utf-8').decode(bytes);
+  }catch(e){
+    try{return decodeURIComponent(escape(atob(b64)));}catch(e2){}
+  }
+  return atob(b64);
+}
+
+function decodeQP(s){
+  return s.replace(/=\r?\n/g,'').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function importEmailFile(ev){
+  const file=ev.target.files[0];
+  if(!file){return;}
+  ev.target.value='';
+  const name=file.name.toLowerCase();
+  const reader=new FileReader();
+
+  function applyHtml(html){
+    if(!html||!html.trim()){
+      showImportError('找不到可用的 HTML 內容，請確認檔案格式正確。');
+      return;
+    }
+    const ed=document.getElementById('tpl-email-editor');
+    if(ed){ed.innerHTML=html;emailEditorDirty=true;}
+  }
+
+  if(name.endsWith('.eml')){
+    reader.onerror=()=>showImportError('檔案讀取失敗，請確認檔案未損毀。');
+    reader.onload=e=>{
+      try{
+        const body=parseEmlHtml(e.target.result);
+        applyHtml(body);
+      }catch(err){
+        showImportError('EML 解析失敗：'+err.message);
+      }
+    };
+    reader.readAsText(file,'utf-8');
+
+  } else if(name.endsWith('.html')||name.endsWith('.htm')){
+    reader.onerror=()=>showImportError('檔案讀取失敗，請確認檔案未損毀。');
+    reader.onload=e=>{
+      try{
+        let src=e.target.result;
+        // Extract body content if full HTML document
+        const bm=src.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+        applyHtml(bm?bm[1]:src);
+      }catch(err){
+        showImportError('HTML 解析失敗：'+err.message);
+      }
+    };
+    reader.readAsText(file,'utf-8');
+
+  } else if(name.endsWith('.msg')){
+    reader.onerror=()=>showImportError('檔案讀取失敗，請確認檔案未損毀。');
+    reader.onload=e=>{
+      try{
+        const bytes=new Uint8Array(e.target.result);
+        const extracted=extractMsgText(bytes);
+        if(extracted){applyHtml(extracted);}
+        else{showImportError('.msg 為 Outlook 私有格式，瀏覽器無法解析。\n建議在 Outlook 另存為 .eml 或 .html 後再匯入。');}
+      }catch(err){
+        showImportError('MSG 解析失敗：'+err.message);
+      }
+    };
+    reader.readAsArrayBuffer(file);
+
+  } else {
+    showImportError('不支援的檔案格式：'+name.split('.').pop().toUpperCase()+'\n支援格式：.eml　.html　.htm　.msg');
+  }
+}
+
+function showImportError(msg){
+  // Show inline error banner in the email editor area
+  const ed=document.getElementById('tpl-email-editor');
+  if(ed){
+    ed.innerHTML='<div style="padding:14px 16px;background:#FFECEC;border:1px solid #FCA5A5;border-radius:6px;color:#991B1B;font-size:12px;line-height:1.8">'
+      +'<b>⚠ 匯入失敗</b><br>'
+      +msg.replace(/\n/g,'<br>')
+      +'<br><br><span style="color:#666">可使用「↺ 重新產生」載入預設模板。</span></div>';
+    emailEditorDirty=false;
+  }
+}
+
+function parseEmlHtml(raw){
+  // Split MIME parts
+  const lines=raw.replace(/\r\n/g,'\n').split('\n');
+  let inHeader=true, boundary='', currentPart='', currentType='', htmlPart='', encoding='';
+  const headers={};
+
+  // Parse top-level headers
+  let i=0;
+  while(i<lines.length&&lines[i].trim()!==''){
+    const m=lines[i].match(/^([A-Za-z-]+):\s*(.*)/);
+    if(m)headers[m[1].toLowerCase()]=m[2];
+    i++;
+  }
+  i++; // skip blank line
+
+  const ct=headers['content-type']||'';
+  const bm=ct.match(/boundary="?([^";\r\n]+)"?/i);
+  if(bm)boundary='--'+bm[1].trim();
+
+  if(!boundary){
+    // Single-part email
+    const enc=headers['content-transfer-encoding']||'';
+    const rest=lines.slice(i).join('\n');
+    if(enc.toLowerCase()==='base64'){
+      try{return atob(rest.replace(/\s/g,''));}catch(e){}
+    }
+    return ct.includes('text/html')?rest:'<pre>'+rest+'</pre>';
+  }
+
+  // Multi-part: find text/html part
+  let parts=[];
+  let partLines=[], inPart=false, partHeaders={}, partEnc='', partCT='';
+  for(;i<lines.length;i++){
+    const line=lines[i];
+    if(line.startsWith(boundary)){
+      if(inPart&&partLines.length){
+        parts.push({ct:partCT,enc:partEnc,body:partLines.join('\n')});
+      }
+      inPart=true; partLines=[]; partHeaders={}; partCT=''; partEnc='';
+      // Parse part headers
+      i++;
+      while(i<lines.length&&lines[i].trim()!==''){
+        const pm=lines[i].match(/^([A-Za-z-]+):\s*(.*)/i);
+        if(pm){partHeaders[pm[1].toLowerCase()]=pm[2];}
+        i++;
+      }
+      partCT=partHeaders['content-type']||'';
+      partEnc=(partHeaders['content-transfer-encoding']||'').toLowerCase();
+    } else if(inPart){
+      partLines.push(line);
+    }
+  }
+
+  // Find HTML part
+  for(const p of parts){
+    if(p.ct.toLowerCase().includes('text/html')){
+      let body=p.body;
+      if(p.enc==='base64'){
+        try{body=decodeURIComponent(escape(atob(body.replace(/\s/g,''))));}catch(e){
+          try{body=atob(body.replace(/\s/g,''));}catch(e2){}
+        }
+      } else if(p.enc==='quoted-printable'){
+        body=body.replace(/=\r?\n/g,'').replace(/=([0-9A-Fa-f]{2})/g,(_,h)=>String.fromCharCode(parseInt(h,16)));
+        try{body=decodeURIComponent(escape(body));}catch(e){}
+      }
+      return body;
+    }
+  }
+  // Fallback: plain text
+  for(const p of parts){
+    if(p.ct.toLowerCase().includes('text/plain')){
+      return '<pre style="white-space:pre-wrap;font-family:inherit">'+p.body+'</pre>';
+    }
+  }
+  return null;
+}
+
+function extractMsgText(bytes){
+  // Attempt to find HTML body in MSG by looking for known HTML markers in UTF-16LE
+  const marker=new TextEncoder().encode('<html').reduce?null:null;
+  // Simple heuristic: scan for '<html' in ASCII (some MSG store HTML as ASCII)
+  let ascii='';
+  for(let i=0;i<Math.min(bytes.length,500000);i++){
+    if(bytes[i]>=32&&bytes[i]<127)ascii+=String.fromCharCode(bytes[i]);
+    else ascii+=' ';
+  }
+  const hi=ascii.indexOf('<html');
+  if(hi>=0){
+    const he=ascii.lastIndexOf('</html>');
+    if(he>hi)return ascii.slice(hi,he+7).replace(/ {3,}/g,' ');
+  }
+  return null;
+}
+
+
+/* ===== 設定・通話 前贅詞 section ===== */
+let cfgPrefixOpts=[
+  '有Demo過。追','Demo改約。追','Demo取消。追',
+  '過去不適齡，現在有機會。追','過去表達過意願，未封鎖來電。追'
+];
+function renderCfgPrefix(){renderCfgCall();}
+
+function syncPrefixPills(){
+  // Rebuild PREFIX_OPTS from cfgPrefixOpts and refresh pills
+  const el=document.getElementById('prefix-pills');
+  if(!el)return;
+  // if current prefixSel no longer exists, clear it
+  const vals=cfgPrefixOpts.map(t=>'【'+t+'】');
+  if(prefixSel&&!vals.includes(prefixSel))prefixSel='';
+  el.innerHTML=cfgPrefixOpts.map((t,i)=>{
+    const val='【'+t+'】';
+    return `<span class="pfx-pill${prefixSel===val?' on':''}" onclick="togglePrefixVal('${val.replace(/'/g,"\\'")}')">${t}</span>`;
+  }).join('');
+  updateCombined();
+}
+
+function togglePrefixVal(val){prefixSel=prefixSel===val?'':val;syncPrefixPills();}
+
+/* ===== 前贅詞 ===== */
+const PREFIX_OPTS=[
+  {id:'p1',text:'有Demo過。追',val:'【有Demo過。追】'},
+  {id:'p2',text:'Demo改約。追',val:'【Demo改約。追】'},
+  {id:'p3',text:'Demo取消。追',val:'【Demo取消。追】'},
+  {id:'p4',text:'過去不適齡，現在有機會。追',val:'【過去不適齡，現在有機會。追】'},
+  {id:'p5',text:'過去表達過意願，未封鎖來電。追',val:'【過去表達過意願，未封鎖來電。追】'}
+];
+function buildPrefixPills(){syncPrefixPills();}
+function togglePrefix(id){
+  const o=PREFIX_OPTS.find(x=>x.id===id);
+  if(!o)return;
+  prefixSel=prefixSel===o.val?'':o.val;
+  syncPrefixPills();
+  updateCombined();
+}
+function clearPrefix(){prefixSel='';syncPrefixPills();updateCombined();}
+
+/* ===== 建議事項 ===== */
+let cfgSuggestOpts=['建議納入無效名單'];
+function syncSuggestionPills(){
+  const el=document.getElementById('sugg-pills');
+  if(!el)return;
+  const vals=cfgSuggestOpts.map(t=>'【建議事項】'+t);
+  if(suggestionSel&&!vals.includes(suggestionSel))suggestionSel='';
+  el.innerHTML=cfgSuggestOpts.map(t=>{
+    const val='【建議事項】'+t;
+    return`<span class="sug-pill${suggestionSel===val?' on':''}" onclick="toggleSuggestionVal('${val.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}')">${t}</span>`;
+  }).join('');
+  updateCombined();
+}
+function toggleSuggestionVal(val){suggestionSel=suggestionSel===val?'':val;syncSuggestionPills();}
+function clearSuggestion(){suggestionSel='';syncSuggestionPills();}
+function buildSuggestionPills(){syncSuggestionPills();}
+
+/* ===== 釋出名單（縮減）===== */
+function updateRelease(){
+  const r=document.getElementById('log-release');
+  if(!r)return;
+  const s1=document.getElementById('log-s1');
+  const s4=document.getElementById('log-s4');
+  const s1v=s1?s1.value.trim():'';
+  const s4v=s4?s4.value.trim():'';
+  if(!s1v&&!s4v&&!prefixSel&&!suggestionSel){r.value='';return;}
+  const d=new Date();
+  const dt=`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  const pfx=prefixSel?prefixSel+'\n':'';
+  const sug=suggestionSel?suggestionSel+'\n':'';
+  const parts=[s1v,s4v].filter(Boolean);
+  r.value=pfx+sug+(parts.length?parts.join('\n')+'\n':'')+'【'+dt+'】';
+}
+function copyRelease(){const r=document.getElementById('log-release');if(!r)return;navigator.clipboard.writeText(r.value).then(()=>flash('btn-copy-release','已複製 ✓','複製'));}
+
+/* ===== 設定・通話 拖拉排序 ===== */
+let _cfgDragData=null;
+function cfgDragStart(e){
+  const el=e.currentTarget;
+  _cfgDragData={step:el.dataset.step,idx:parseInt(el.dataset.idx)};
+  e.dataTransfer.effectAllowed='move';
+  setTimeout(()=>el.style.opacity='0.4',0);
+}
+function cfgDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect='move';
+  document.querySelectorAll('.cfg-drag-item').forEach(el=>el.classList.remove('drag-over'));
+  e.currentTarget.classList.add('drag-over');
+}
+function cfgDrop(e){
+  e.preventDefault();
+  const el=e.currentTarget;
+  el.classList.remove('drag-over');
+  if(!_cfgDragData)return;
+  const toStep=el.dataset.step;
+  const toIdx=parseInt(el.dataset.idx);
+  const fromStep=_cfgDragData.step;
+  const fromIdx=_cfgDragData.idx;
+  _cfgDragData=null;
+  if(fromStep!==toStep||fromIdx===toIdx)return;
+  const arr=cfg[fromStep];
+  const item=arr.splice(fromIdx,1)[0];
+  arr.splice(toIdx,0,item);
+  renderCfgCall();
+  renderStep(fromStep);
+}
+function cfgDragEnd(e){
+  e.currentTarget.style.opacity='';
+  document.querySelectorAll('.cfg-drag-item').forEach(el=>el.classList.remove('drag-over'));
+  _cfgDragData=null;
+}
+
+/* ===== 介紹模板 ===== */
+let tplTab='line';
+let emailEditorDirty=false;
+let lineEditorDirty=false;
+let _colorSavedRange=null;
+function openTplModal(){
+  // auto-fill from KYC fields where possible
+  const ageEl=document.getElementById('k-demo-age');
+  if(ageEl&&ageEl.value){
+    if(!document.getElementById('te-age').value)document.getElementById('te-age').value=ageEl.value;
+    if(!document.getElementById('tl-childage').value)document.getElementById('tl-childage').value=ageEl.value+'歲';
+  }
+  const devEl=document.getElementById('k-device');
+  if(devEl&&devEl.value){
+    const v=devEl.value.toLowerCase();
+    const map=v.includes('電腦')||v.includes('pc')?'pc':v.includes('平板')||v.includes('ipad')?'tablet':'tablet';
+    const r=document.querySelector(`input[name="tl-device"][value="${map}"]`);
+    if(r)r.checked=true;
+  }
+  buildTlDateGrid();buildTlTimeGrid();
+  if(tplTab==='line'){const led=document.getElementById('tpl-line-editor');if(led&&!led.innerText.trim()){lineEditorDirty=false;led.innerText=buildLineTpl();}}
+  if(tplTab==='email'){if(!emailEditorDirty){const ed=document.getElementById('tpl-email-editor');if(ed)ed.innerHTML=buildEmailHtml();}}
+  document.getElementById('tpl-overlay').classList.add('open');
+}
+function toggleTplMax(){
+  const m=document.querySelector('.tpl-modal');
+  if(!m)return;
+  const isMax=m.classList.toggle('maxed');
+  const btn=document.getElementById('btn-tpl-max');
+  if(btn)btn.textContent=isMax?'⊡':'⛶';
+}
+
+function closeTplModal(){document.getElementById('tpl-overlay').classList.remove('open');}
+function closeTplIfBg(e){if(e.target===document.getElementById('tpl-overlay'))closeTplModal();}
+function switchTplTab(t){
+  tplTab=t;
+  document.getElementById('ttab-line').classList.toggle('on',t==='line');
+  document.getElementById('ttab-email').classList.toggle('on',t==='email');
+  document.getElementById('tpl-line-cfg').style.display=t==='line'?'':'none';
+  document.getElementById('tpl-email-cfg').style.display=t==='email'?'':'none';
+  const mailBtn=document.getElementById('btn-open-mail');
+  if(mailBtn)mailBtn.style.display=t==='email'?'':'none';
+  const lineEdWrap=document.getElementById('tpl-line-editor-wrap');
+  const emailEdWrap=document.getElementById('tpl-email-editor-wrap');
+  if(lineEdWrap)lineEdWrap.style.display=t==='line'?'flex':'none';
+  if(emailEdWrap)emailEdWrap.style.display=t==='email'?'flex':'none';
+  if(t==='line'){buildTlDateGrid();buildTlTimeGrid();
+    const led=document.getElementById('tpl-line-editor');
+    if(led&&!led.innerText.trim()){lineEditorDirty=false;led.innerText=buildLineTpl();}
+    else renderTpl();}
+  if(t==='email'){if(!emailEditorDirty){const ed=document.getElementById('tpl-email-editor');if(ed)ed.innerHTML=buildEmailHtml();}}
+}
+function renderTpl(){
+  if(tplTab==='line'){
+    const ed=document.getElementById('tpl-line-editor');
+    if(ed&&!lineEditorDirty)ed.innerText=buildLineTpl();
+  } else if(tplTab==='email'){
+    if(!emailEditorDirty){
+      const ed=document.getElementById('tpl-email-editor');
+      if(ed)ed.innerHTML=buildEmailHtml();
+    }
+  }
+}
+function regenLine(){
+  lineEditorDirty=false;
+  const ed=document.getElementById('tpl-line-editor');
+  if(ed)ed.innerText=buildLineTpl();
+}
+function v(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function buildLineTpl(){
+  const myName   = v('tl-name')     || '000';
+  const parent   = (()=>{const el=document.querySelector('input[name="tl-parent"]:checked');return el?el.value:'家長';})();
+  const parentEmail = v('tl-email') || '__@gmail.com';
+  const child    = (()=>{const el=document.querySelector('input[name="tl-child"]:checked');return el?el.value:'孩子';})();
+  const childName= v('tl-childname')|| '__';
+  const childAge = v('tl-childage') || '__歲';
+  const devEl    = document.querySelector('input[name="tl-device"]:checked');
+  const devVal   = devEl ? devEl.value : 'tbd';
+
+  // Date with weekday
+  let dateStr='__/__';
+  if(tlDate){
+    const parts=tlDate.split('/');
+    const d=new Date(new Date().getFullYear(),parseInt(parts[0])-1,parseInt(parts[1]));
+    const wds=['日','一','二','三','四','五','六'];
+    dateStr=tlDate+'('+wds[d.getDay()]+')';
+  }
+  const time = tlTime || '__:__';
+
+  // Device lines for ▪️
+  let deviceLine;
+  if(devVal==='tablet')       deviceLine='平板';
+  else if(devVal==='pc')      deviceLine='電腦';
+  else if(devVal==='both')    deviceLine='平板／電腦';
+  else                         deviceLine=`（${parent}確認後再回覆，需要確認設備版本）`;
+
+  // Instruction blocks
+  const tabletBlock=
+`⭐平板試聽操作流程：
+1.請先下載Webex（下載後不要打開）
+2.接著到平板設定，點選safari，把「阻擋彈出視窗」和「切換為電腦版網站」這兩個選項關掉。
+3.最後到時候從信件連結進入即可`;
+
+  const pcBlock=
+`⭐電腦試聽操作流程：
+1.確認有收到信件
+2.從信件連結進入即可`;
+
+  let instrBlock='';
+  if(devVal==='tablet') instrBlock=tabletBlock;
+  else if(devVal==='pc') instrBlock=pcBlock;
+  else if(devVal==='both') instrBlock=tabletBlock+'\n\n'+pcBlock;
+  else instrBlock=tabletBlock+'\n\n'+pcBlock;
+
+  // Between blocks: insert blank line
+  const instrBlockSpaced = instrBlock.split('\n⭐').map((s,i)=>i===0?s:'⭐'+s).join('\n\n');
+
+  return `再麻煩${parent}了~剛剛有發試聽通知信至您的mail
+${parentEmail}
+${parent}可以確認一下
+如果沒有看到 再至垃圾信看看是否有收到
+謝謝
+
+試聽資訊
+▪️試讀時間：${dateStr}${time}
+▪️${child}名字歲數：${childName}　${childAge}
+▪️上課設備${devVal==='tbd'?deviceLine:('：'+deviceLine)}
+
+⭐剛剛系統發出確認試聽後發出通知信，請在當天提早15分鐘上線確認設備與連線
+筆試不需要填寫唷 當天準備登入就可以囉~
+
+${instrBlockSpaced}`;
+}
+
+function buildEmailTpl(){
+  const cust=v('te-name')||'您';
+  const ageRaw2=v('te-age')||'__';
+  const age=ageRaw2.replace(/歲$/,'')+'歲';
+  const lineId=v('te-lineid')||'your-line-id';
+  const ext=v('te-ext')||'___';
+  const cname=v('te-cname')||'顧問姓名';
+  return `${cust}您好，稍早有致電給您：
+
+寫在最前頭，確實在我們的授課經驗上，會建議4歲以上的孩童開始接觸全英文的母語環境，能有效建立長期的學習效果。
+以今日稍早致電給您時的了解，您的孩子目前 ${age}，確實可能會有常見的如：不知如何做意識表達與接收指令、坐不住……等情況。
+
+帶你了解有關 ETalking 的資訊！如有想進一步了解，歡迎回信給我
+或加入我 LINE ID：${lineId}（有意願再溝通，沒有額外打擾）
+※若有加入Line，需要麻煩傳送一個貼圖給我，感謝
+
+
+花10-15分鐘瀏覽下列資訊，了解ETalking Kids，也為孩子開啟學習英文的道路
+ETalking Kids課程介紹影片（點擊文字可連結至影片）
+ETalking Kids介紹影片2.0（點擊文字可連結至影片）
+ETalking Kids官方網站（點擊文字可連結至網頁）
+【將官網加入我的最愛，上課之後網址不需反覆輸入】
+ETalking Kids 課程詳細說明（點擊文字可連結至網頁）
+ETalking Kids學員心得分享文章（點擊文字可連結至網頁）
+ETalking Kids學員心得分享影片（點擊文字可連結至影片）
+
+回覆下列資料，為您安排線上體驗—以便客製化最佳課程安排
+1. 孩子中文名：
+2. 孩子英文名：
+3. 孩子年齡：
+4. 想要針對哪個部分做加強（發音、語法、口語、聽力、閱讀、寫作）
+
+
+如有想進一步了解，歡迎回信給我
+LINE ID：${lineId}（有意願再溝通，沒有額外打擾）
+※若有加入Line，需要麻煩傳送一個貼圖給我，感謝
+
+${cname}
+課程顧問 Consultant
+
+ETalking Online
+地址／台北市松山區八德路四段465號11樓
+電話／ (886-2)2760-7768 ext／ ${ext}
+http://www.etalkingonline.com/`;
+}
+/* ===== 未滿四歲提醒段落 ===== */
+let emailAgeNote = false;
+function toggleAgeNote(){
+  emailAgeNote = !emailAgeNote;
+  const btn = document.getElementById('btn-age-note');
+  if(btn) btn.classList.toggle('on', emailAgeNote);
+  regenEmail();
+}
+function checkAgeHint(){
+  const ageEl = document.getElementById('te-age');
+  const hint  = document.getElementById('te-age-hint');
+  if(!ageEl || !hint) return;
+  const n = parseInt(ageEl.value);
+  hint.style.display = (!isNaN(n) && n < 4) ? 'inline' : 'none';
+}
+
+/* ===== Email template ===== */
+function buildEmailHtml(){
+  const cust   = v('te-name')   || '您';
+  const ageRaw = v('te-age') || '__';
+  const age    = ageRaw.replace(/歲$/, '') + '歲';
+  const lineId = v('te-lineid') || 'your-line-id';
+  const ext    = v('te-ext')    || '___';
+  const cname  = v('te-cname')  || '顧問姓名';
+  const F = 'font-family:"Microsoft JhengHei","微軟正黑體","Noto Sans TC",Arial,sans-serif';
+  const B = F+';font-size:12pt;color:#1a1a1a;line-height:1.8';
+  const BL = 'margin:5px 0 5px 40px;'+F;
+  const SB = 'margin:2px 0 2px 40px;'+F;
+  return `<div style="${B};max-width:740px;margin:0 auto;padding:20px 24px">
+<p style="margin:0 0 8px"><img src="http://etalkingonline.com/images/EDM/etalkinglogo.png"
+  alt="ETalking" style="max-width:300px;height:auto" onerror="this.style.display='none'"></p>
+<p style="margin:0 0 8px">${cust}您好，稍早有致電給您：</p>
+<p style="margin:0 0 8px"><br></p>
+${emailAgeNote?`<div style="margin-left:40px;padding:8px 12px;background:#FFF3CD;border-left:3px solid #F59E0B;margin-bottom:8px;line-height:1.9">寫在最前頭，確實在我們的授課經驗上，會建議4歲以上的孩童開始接觸全英文的母語環境，能有效建立長期的學習效果。<br>以今日稍早智電給您時的了解，您的孩子目前 <strong>${age}</strong>，確實可能會有常見的如：不知如何做意識表達與接收指令、坐不住….等情況。</div>`:''}
+<p style="margin:0 0 8px">帶你了解有關 ETalking 的資訊！！如有想進一步了解，歡迎回信給我<br>
+或加入我 LINE ID：<strong>${lineId}</strong>（有意願再溝通，沒有額外打擾）<br>
+※若有加入 Line，需要麻煩傳送一個貼圖給我，感謝</p>
+<table style="border-collapse:collapse;margin:16px 0 0 40px;width:calc(100% - 40px)"><tr>
+  <td style="background:#F7CAAC;padding:8px 12px;font-weight:700;font-size:12pt;text-align:center;${F}">花10-15分鐘瀏覽下列資訊，了解 ETalking Kids，也為孩子開啟學習英文的道路</td>
+</tr></table>
+<div style="margin:6px 0 0 40px;line-height:2.2;${F}">
+  <a href="https://youtu.be/PawsRV-MJOA">ETalking Kids課程介紹影片</a>（點擊文字可連結至影片）<br>
+  <a href="https://www.youtube.com/watch?v=ZN5gcx2vwZQ">ETalking Kids介紹影片2.0</a>（點擊文字可連結至影片）<br>
+  <a href="http://www.etalking.com.tw/">ETalking Kids官方網站</a>（點擊文字可連結至網頁）
+</div>
+<p style="margin:4px 0 4px 40px;color:#C55A11;${F}">【將官網加入我的最愛，上課之後網址不需反覆輸入】</p>
+<div style="margin:0 0 6px 40px;line-height:2.2;${F}">
+  <a href="https://blog.etalking.com.tw/etalking-kids-course-description/">ETalking Kids 課程詳細說明</a>（點擊文字可連結至網頁）<br>
+  <a href="https://weantiffany.pixnet.net/blog/post/69037272">ETalking Kids學員心得分享文章</a>（點擊文字可連結至網頁）<br>
+  <a href="https://www.youtube.com/watch?v=5SrukjK8zwk">ETalking Kids學員心得分享影片</a>（點擊文字可連結至影片）
+</div>
+<table style="border-collapse:collapse;margin:16px 0 0 40px;width:calc(100% - 40px)"><tr>
+  <td style="background:#FFE599;padding:8px 12px;font-size:12pt;text-align:center;${F}"><b style="color:#C55A11">回覆下列資料，為您安排體線上體驗</b><span style="color:#C55A11">-以便</span><b style="color:#C00000">客製化最佳課程安排</b></td>
+</tr></table>
+<p style="margin:3px 0 1px 56px;${F}">1.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 孩子中文名:</p>
+<p style="margin:1px 0 1px 56px;${F}">2.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 孩子英文名:</p>
+<p style="margin:1px 0 1px 56px;${F}">3.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 孩子年齡:</p>
+<p style="margin:1px 0 4px 56px;${F}">4.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 想要針對哪個部分做加強（發音、語法、口語、聽力、閱讀、寫作）</p>
+<table style="border-collapse:collapse;margin:16px 0 0 40px;width:calc(100% - 40px)"><tr>
+  <td style="background:#99CCFF;padding:8px 12px;font-weight:700;font-size:12pt;text-align:center;${F}">認識 ETalking Kids</td>
+</tr></table>
+<p style="${BL}">● 只要有行動裝置 + 網路的地方就可以上課，地點、時間由您決定。</p>
+<p style="${SB}"><b style="color:#C00000">上課時間15:00~22:55</b>。半點開課，全天候皆可學習。</p>
+<p style="${BL}">● 一堂課時間<b style="color:#C00000">25分鐘，自選老師</b>，每天可以預約14天後時間，只需提前24小時預定課程，課程12小時間可彈性取消。</p>
+<p style="${BL}">● 模擬國外語言學校方式，<b style="color:#C00000">全英文學習 – 聽說帶動讀寫</b>，透過語言氛圍擴充聽說能力及多元詞彙量。</p>
+<p style="${BL}">● <b style="color:#C00000">培養母語學習環境-採用美國小學選用教材Journeys及American Headway</b>。</p>
+<p style="${SB}">每課皆有相關閱讀理解問答，讓老師與孩子進行口語討論。</p>
+<p style="${SB}">每課都有<b style="color:#C00000">Phonics</b>和<b style="color:#C00000">sight words</b>的學習，讓孩子為日後閱讀長篇文章扎下堅實基礎。</p>
+<p style="${SB}">教材設計與編寫需要專業團隊花大量時間總結不同經驗來完成，ETalking與國外權威機構合作，</p>
+<p style="${SB}">我們專注於訓練老師的教學技巧與開發更多元的輔助課程。</p>
+<p style="${SB}">Journeys介紹：<a href="https://kknews.cc/zh-tw/education/gpjg43y.html">https://kknews.cc/zh-tw/education/gpjg43y.html</a></p>
+<p style="${BL}">● 上課採用<b style="color:#C00000">雙向視訊</b>，讓孩子盡情開口練習，不擔心害羞不敢說，也不害怕說錯。</p>
+<p style="${BL}">● 上課提供<b style="color:#C00000">透明教室</b>，讓家長們隨時隨地掌握孩子學習內容。</p>
+<p style="${SB}">上課過程無須做筆記，每堂課皆有錄製錄影檔，可至學員專區陪同孩子觀看複習。</p>
+<p style="${BL}">● 提供選修課程，<b style="color:#C00000">寫作、文法、自傳教材、YLE證照模擬考試、GEPT英檢模擬考等</b>全方位提升聽說讀寫實際運用能力。</p>
+<p style="${BL}">● 透過知識魔法屋讓孩子收集多元詞彙大量提升Input水平、增添許多手做互動課程讓孩子輕鬆學英文。</p>
+<p style="${BL}">● 定期聯繫家長完善課後評鑑系統，<u>下課後皆可評鑑顧問上課狀況</u>。</p>
+<p style="${BL}">● ETalking Kids根據孩子程度分析結果與家長們自身需求為孩子<u>量身訂製課程</u>。</p>
+<p style="margin:0 0 8px"><br></p>
+<p style="margin:0 0 8px">如有想進一步了解，歡迎回信給我<br>
+LINE ID：<strong>${lineId}</strong>（有意願再溝通，沒有額外打擾）<br>
+※若有加入Line，需要麻煩傳送一個貼圖給我，感謝</p>
+<div style="margin-top:22px;padding-top:12px;border-top:2px solid #2563EB">
+  <span style="font-family:'Segoe Script','標楷體',cursive;font-size:14pt;color:#1F4E79;font-weight:700">${cname}</span><br>
+  <span style="color:#1F4E79;font-size:11pt">課程顧問 Consultant</span><br><br>
+  <span style="color:#1F497D;font-size:9pt;line-height:1.7">ETalking Online<br>
+    地址／台北市松山區八德路四段465號11樓<br>
+    電話／(886-2)2760-7768 ext／${ext}<br>
+    ADD／11F, No. 465, Sec. 4, BaDe Rd., SongShen dis., Taipei<br>
+    TEL／(02)2760-7768 ext／${ext}&nbsp;&nbsp;FAX／(02)2760-5898<br>
+    <a href="http://www.etalkingonline.com/" style="color:#1F497D">http://www.etalkingonline.com/</a>
+  </span>
+</div>
+</div>`;
+}
+function regenEmail(){emailEditorDirty=false;const ed=document.getElementById('tpl-email-editor');if(ed)ed.innerHTML=buildEmailHtml();}
+function getEmailEditorContent(){const ed=document.getElementById('tpl-email-editor');return ed?ed.innerHTML:'';}
+
+function copyTpl(){
+  if(tplTab==='email'){
+    const ed=document.getElementById('tpl-email-editor');
+    navigator.clipboard.writeText(ed?ed.innerText:'').then(()=>flash('btn-copy-tpl','已複製 ✓','複製'));
+  }else{
+    const led=document.getElementById('tpl-line-editor');
+    navigator.clipboard.writeText(led?led.innerText:'').then(()=>flash('btn-copy-tpl','已複製 ✓','複製'));
+  }
+}
+Promise.all([fetch('./items-call.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),fetch('./selects-kyc.json?v='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)]).then(([callData,kycData])=>{if(callData)try{applyCallData(callData);}catch(e){}if(kycData)try{applyKYCData(kycData);}catch(e){}initApp();}).catch(()=>initApp());
+</script>
+</body>
+</html>
