@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>ETalking 通話 &amp; KYC 紀錄模板 v80</title>
+<title>ETalking 通話 &amp; KYC 紀錄模板 v81</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -317,7 +317,7 @@ body{font-family:'Noto Sans TC',sans-serif;background:var(--bg);color:var(--t1);
 </head>
 <body>
 <div class="app">
-<div class="topbar"><span class="brand" id="app-brand">ETalking 通話 &amp; KYC 紀錄模板 v80</span><span class="clock" id="clock">—</span></div>
+<div class="topbar"><span class="brand" id="app-brand">ETalking 通話 &amp; KYC 紀錄模板 v81</span><span class="clock" id="clock">—</span></div>
 <div class="tabs">
   <button class="tbtn on" onclick="switchTab('call')">通話記錄</button>
   <button class="tbtn" onclick="switchTab('kyc')">KYC 顧客資訊</button>
@@ -676,7 +676,7 @@ const L_NUMS=['L1','L2','L3','L4','L5','L6'],L_RARE=['L4','L5','L6'];
 function pad(n){return String(n).padStart(2,'0');}
 function nowStr(){const d=new Date();return`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())}  ${pad(d.getHours())}:${pad(d.getMinutes())}`;}
 function nowKYC(){const d=new Date();return`${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;}
-const APP_VERSION='v80';
+const APP_VERSION='v81';
 (()=>{const b=document.getElementById('app-brand');if(b)b.textContent='ETalking 通話 & KYC 紀錄模板 '+APP_VERSION;document.title='ETalking 通話 & KYC 紀錄模板 '+APP_VERSION;})();
 function tick(){document.getElementById('clock').textContent=nowStr();}
 tick();setInterval(tick,30000);
